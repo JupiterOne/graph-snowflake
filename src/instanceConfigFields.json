@@ -1,0 +1,12 @@
+{
+  "username": {
+    "type": "string"
+  },
+  "account": {
+    "type": "string"
+  },
+  "password": {
+    "type": "string",
+    "mask": true
+  }
+}
