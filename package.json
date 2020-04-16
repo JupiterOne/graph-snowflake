@@ -14,7 +14,9 @@
     "build": "tsc -p tsconfig.dist.json --declaration"
   },
   "dependencies": {
-    "@jupiterone/integration-sdk": "^0.1.0"
+    "@jupiterone/integration-sdk": "^0.2.2",
+    "snowflake-sdk": "^1.5.1",
+    "stream-to-async-iterator": "^0.2.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
