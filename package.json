@@ -4,6 +4,8 @@
   "description": "A JupiterOne Integration",
   "license": "MPL-2.0",
   "scripts": {
+    "generate-schemas": "yarn typescript-json-schema ./src/client/types.ts \"*\" -o src/client/schemas/index.json",
+    "prestart": "yarn generate-schemas",
     "start": "j1-integration collect",
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
     "format": "prettier --write '**/*.{ts,js,json,css,md,yml}'",
