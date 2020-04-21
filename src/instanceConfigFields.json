@@ -8,5 +8,8 @@
   "password": {
     "type": "string",
     "mask": true
+  },
+  "role": {
+    "type": "string"
   }
 }
