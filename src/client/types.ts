@@ -38,10 +38,10 @@ export type RawSnowflake = {
     rows: number;
     bytes: number;
     owner: string;
-    retention_time: number;
+    retention_time: string;
     automatic_clustering: ONorOFF;
     change_tracking: ONorOFF;
-    dropped_on?: string;
+    dropped_on?: string | undefined;
   };
 
   View: {
@@ -258,13 +258,141 @@ export type RawSnowflake = {
     has_rsa_public_key: BoolStr;
   };
 
-  Grant: {
+  // All of the `SHOW GRANT ...` types map to
+  // a command signature seen here:
+  // https://docs.snowflake.com/en/sql-reference/sql/show-grants.html
+  // TODO: is there overlap in any of these commands? Need to make sure
+  // we don't accidentally created more entities / relationships than necessary.
+  // TODO: make union type of all (seen) privileges
+  // output from `SHOW GRANTS;`
+  GlobalGrant: {
     created_on: string;
     role: string;
     granted_to: string;
     grantee_name: string;
     granted_by: string;
   };
+
+  // output from `SHOW GRANTS ON ACCOUNT;`
+  AccountPrivilegeGrant: {
+    created_on: string;
+    privilege: string;
+    granted_on: string;
+    name: string;
+    granted_to: string;
+    grantee_name: string;
+    grant_option: BoolStr;
+    granted_by: string;
+  };
+
+  ////////////////////////////////////////////////////////////
+  // START `SHOW GRANTS TO ...`                             //
+  ////////////////////////////////////////////////////////////
+  // output from `SHOW GRANTS TO ROLE <role name>;`
+  ToRolePrivilegeGrant: {
+    created_on: string;
+    privilege: string;
+    granted_on: string;
+    name: string;
+    granted_to: string;
+    grantee_name: string;
+    grant_option: boolean;
+    granted_by: string;
+  };
+
+  // output from `SHOW GRANTS TO USER <user name>;`
+  ToUserPrivilegeGrant: {
+    created_on: string;
+    role: string;
+    granted_to: string;
+    grantee_name: string;
+    granted_by: string;
+  };
+
+  // output from `SHOW GRANTS TO SHARE <share name>;`
+  ToShareGrant: {
+    created_on: string;
+    privilege: string;
+    granted_on: string;
+    name: string;
+    granted_to: string;
+    grantee_name: string;
+    grant_option: string;
+  };
+  ////////////////////////////////////////////////////////////
+  // END `SHOW GRANTS TO ...`                               //
+  ////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////
+  // START `SHOW GRANTS OF ...`                             //
+  ////////////////////////////////////////////////////////////
+  // output from `SHOW GRANTS OF SHARE <share name>;`
+  OfShareGrant: {
+    created_on: string;
+    share: string;
+    granted_to: string;
+    grantee_name: string;
+    granted_by: string;
+  };
+
+  // output from `SHOW GRANTS OF ROLE <role name>;`
+  OfRoleGrant: {
+    created_on: string;
+    role: string;
+    granted_to: string;
+    grantee_name: string;
+    granted_by: string;
+  };
+  ////////////////////////////////////////////////////////////
+  // END `SHOW GRANTS TO ...`                               //
+  ////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////
+  // START `SHOW FUTURE GRANTS IN ...`                      //
+  ////////////////////////////////////////////////////////////
+  // output from `SHOW FUTURE GRANTS IN SCHEMA <database name> <schema name>;`
+  FutureSchemaGrant: {
+    created_on: string;
+    privilege: string;
+    grant_on: string;
+    name: string;
+    grant_to: string;
+    grantee_name: string;
+    grant_option: BoolStr;
+  };
+
+  // output from `SHOW FUTURE GRANTS IN DATABASE <database name>;`
+  FutureDatabaseGrant: {
+    created_on: string;
+    privilege: string;
+    grant_on: string;
+    name: string;
+    grant_to: string;
+    grantee_name: string;
+    grant_option: BoolStr;
+  };
+  ////////////////////////////////////////////////////////////
+  // END `SHOW FUTURE GRANTS IN ...`                        //
+  ////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////
+  // START `SHOW GRANTS ON <object-type> <object-name> ...` //
+  ////////////////////////////////////////////////////////////
+  // examples for object type: `USER, DATABASE, SCHEMA, SHARE, VIEW, STREAM, etc.`
+  // output from `SHOW GRANTS ON <object type> <object name>;`
+  OnObjectGrant: {
+    created_on: string;
+    privilege: string;
+    granted_on: string;
+    name: string;
+    granted_to: string;
+    grantee_name: string;
+    grant_option: BoolStr;
+    granted_by: string;
+  };
+  ////////////////////////////////////////////////////////////
+  // END `SHOW GRANTS ON <object-type> <object-name> ...`   //
+  ////////////////////////////////////////////////////////////
 
   Role: {
     created_on: string;

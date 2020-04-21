@@ -10,12 +10,22 @@ const {
   VIEWS,
   FILE_FORMATS,
   FUNCTIONS,
-  GRANTS,
+  GLOBAL_GRANTS,
+  ACCOUNT_GRANTS,
+  TO_ROLE_GRANTS,
+  TO_USER_GRANTS,
+  TO_SHARE_GRANTS,
+  OF_SHARE_GRANTS,
+  OF_ROLE_GRANTS,
+  FUTURE_SCHEMA_GRANTS,
+  FUTURE_DATABASE_GRANTS,
+  ON_OBJECT_GRANTS,
   INTEGRATIONS,
   MANAGED_ACCOUNTS,
   PIPES,
   PROCEDURES,
   REGIONS,
+  ROLES,
   SCHEMAS,
   SHARES,
   STAGES,
@@ -65,6 +75,9 @@ interface RawConnection {
   destroy: (fn: DestroyFn) => void;
 }
 
+type SnowflakeTypes = RawSnowflake[keyof RawSnowflake];
+type ExecuteSqlCommandFn<T extends SnowflakeTypes> = () => AsyncIterable<T>;
+
 function _createRawConnection(
   username: string,
   account: string,
@@ -84,9 +97,6 @@ function _createRawConnection(
     });
   });
 }
-
-type SnowflakeTypes = RawSnowflake[keyof RawSnowflake];
-type ExecuteSqlCommandFn<T extends SnowflakeTypes> = () => AsyncIterable<T>;
 
 // at the moment just logging validation results and errors.
 async function* withValidator<T extends SnowflakeTypes>(
@@ -115,15 +125,18 @@ export class Client {
   private createRawConnection: () => Promise<RawConnection>;
   private connection: RawConnection;
   private logger: IntegrationLogger;
+
   constructor(options: CreateClientOptions) {
     const { username, account, password, logger } = options;
     this.logger = logger;
     this.createRawConnection = () =>
       _createRawConnection(username, account, password);
   }
+
   async connect() {
     this.connection = await this.createRawConnection();
   }
+
   destroy(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.connection.destroy((err: Error) => {
@@ -137,16 +150,17 @@ export class Client {
   executeStatement<T = any>(sqlText: string): AsyncIterable<T> {
     const statement = this.connection.execute({
       sqlText,
-      fetchAsString: ['Number', 'Date'],
+      fetchAsString: ['Date'],
     });
     const stream = statement.streamRows();
     return stream;
   }
+
   executeStatementNoReturn(sqlText: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.connection.execute({
         sqlText,
-        fetchAsString: ['Number', 'Date'],
+        fetchAsString: ['Date'],
         complete: (err: Error) => {
           if (err) {
             reject(err);
@@ -157,126 +171,280 @@ export class Client {
     });
   }
 
-  fetchDatabases() {
-    return withValidator<RawSnowflake['Database']>(
-      'Database',
-      this.logger,
-      () => this.executeStatement<RawSnowflake['Database']>(DATABASES),
+  private withValidator<T extends SnowflakeTypes>({
+    typeName,
+    statement,
+  }: {
+    typeName: string;
+    statement: string;
+  }) {
+    return withValidator<T>(typeName, this.logger, () =>
+      this.executeStatement<T>(statement),
     );
+  }
+
+  fetchDatabases() {
+    const typeName = 'Database';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = DATABASES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchFileFormats() {
-    return withValidator<RawSnowflake['FileFormat']>(
-      'FileFormat',
-      this.logger,
-      () => this.executeStatement<RawSnowflake['FileFormat']>(FILE_FORMATS),
-    );
+    const typeName = 'FileFormat';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = FILE_FORMATS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchFunctions() {
-    return withValidator<RawSnowflake['Function']>(
-      'Function',
-      this.logger,
-      () => this.executeStatement<RawSnowflake['Function']>(FUNCTIONS),
-    );
+    const typeName = 'Function';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = FUNCTIONS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
-  fetchGrants() {
-    return withValidator<RawSnowflake['Grant']>('Grant', this.logger, () =>
-      this.executeStatement<RawSnowflake['Grant']>(GRANTS),
-    );
+  fetchGlobalGrants() {
+    const typeName = 'GlobalGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = GLOBAL_GRANTS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchAccountGrants() {
+    const typeName = 'AccountPrivilegeGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = ACCOUNT_GRANTS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchToRoleGrants(roleName: string) {
+    const typeName = 'ToRolePrivilegeGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = TO_ROLE_GRANTS(roleName);
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchToUserGrants(userName: string) {
+    const typeName = 'ToUserPrivilegeGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = TO_USER_GRANTS(userName);
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchToShareGrants(shareName: string) {
+    const typeName = 'ToShareGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = TO_SHARE_GRANTS(shareName);
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchOfShareGrants(shareName: string) {
+    const typeName = 'OfShareGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = OF_SHARE_GRANTS(shareName);
+    return this.withValidator<ReturnType>({ typeName, statement });
+  }
+
+  fetchOfRoleGrants(roleName: string) {
+    const typeName = 'OfRoleGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = OF_ROLE_GRANTS(roleName);
+    return this.withValidator<ReturnType>({ typeName, statement });
+  }
+
+  fetchFutureSchemaGrants(schemaName: string) {
+    const typeName = 'FutureSchemaGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = FUTURE_SCHEMA_GRANTS(schemaName);
+    return this.withValidator<ReturnType>({ typeName, statement });
+  }
+
+  fetchFutureDatabaseGrants(databaseName: string) {
+    const typeName = 'FutureDatabaseGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = FUTURE_DATABASE_GRANTS(databaseName);
+    return this.withValidator<ReturnType>({ typeName, statement });
+  }
+
+  fetchOnObjectGrants(input: { objectType: string; objectName: string }) {
+    const typeName = 'OnObjectGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = ON_OBJECT_GRANTS(input);
+    return this.withValidator<ReturnType>({ typeName, statement });
   }
 
   fetchIntegrations() {
-    return withValidator<RawSnowflake['Integration']>(
-      'Integration',
-      this.logger,
-      () => this.executeStatement<RawSnowflake['Integration']>(INTEGRATIONS),
-    );
+    const typeName = 'Integration';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = INTEGRATIONS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchManagedAccounts() {
-    return withValidator<RawSnowflake['ManagedAccount']>(
-      'ManagedAccount',
-      this.logger,
-      () =>
-        this.executeStatement<RawSnowflake['ManagedAccount']>(MANAGED_ACCOUNTS),
-    );
+    const typeName = 'ManagedAccount';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = MANAGED_ACCOUNTS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchPipes() {
-    return withValidator<RawSnowflake['Pipe']>('Pipe', this.logger, () =>
-      this.executeStatement<RawSnowflake['Pipe']>(PIPES),
-    );
+    const typeName = 'Pipe';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = PIPES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchProcedures() {
-    return withValidator<RawSnowflake['Procedure']>(
-      'Procedure',
-      this.logger,
-      () => this.executeStatement<RawSnowflake['Procedure']>(PROCEDURES),
-    );
+    const typeName = 'Procedure';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = PROCEDURES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchRoles() {
+    const typeName = 'Role';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = ROLES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchRegions() {
-    return withValidator<RawSnowflake['Region']>('Region', this.logger, () =>
-      this.executeStatement<RawSnowflake['Region']>(REGIONS),
-    );
+    const typeName = 'Region';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = REGIONS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchSchemas() {
-    return withValidator<RawSnowflake['Schema']>('Schema', this.logger, () =>
-      this.executeStatement<RawSnowflake['Schema']>(SCHEMAS),
-    );
+    const typeName = 'Schema';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = SCHEMAS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchShares() {
-    return withValidator<RawSnowflake['Share']>('Share', this.logger, () =>
-      this.executeStatement<RawSnowflake['Share']>(SHARES),
-    );
+    const typeName = 'Share';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = SHARES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchStages() {
-    return withValidator<RawSnowflake['Stage']>('Stage', this.logger, () =>
-      this.executeStatement<RawSnowflake['Stage']>(STAGES),
-    );
+    const typeName = 'Stage';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = STAGES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchStreams() {
-    return withValidator<RawSnowflake['Stream']>('Stream', this.logger, () =>
-      this.executeStatement<RawSnowflake['Stream']>(STREAMS),
-    );
+    const typeName = 'Stream';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = STREAMS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchTables() {
-    return withValidator<RawSnowflake['Table']>('Table', this.logger, () =>
-      this.executeStatement<RawSnowflake['Table']>(TABLES),
-    );
+    const typeName = 'Table';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = TABLES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
   fetchTasks() {
-    return withValidator<RawSnowflake['Task']>('Task', this.logger, () =>
-      this.executeStatement<RawSnowflake['Task']>(TASKS),
-    );
+    const typeName = 'Task';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = TASKS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchUsers() {
-    return withValidator<RawSnowflake['User']>('User', this.logger, () =>
-      this.executeStatement<RawSnowflake['User']>(USERS),
-    );
+    const typeName = 'User';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = USERS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchViews() {
-    return withValidator<RawSnowflake['View']>('View', this.logger, () =>
-      this.executeStatement<RawSnowflake['View']>(VIEWS),
-    );
+    const typeName = 'View';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = VIEWS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 
   fetchWarehouses() {
-    return withValidator<RawSnowflake['Warehouse']>(
-      'Warehouse',
-      this.logger,
-      () => this.executeStatement<RawSnowflake['Warehouse']>(WAREHOUSES),
-    );
+    const typeName = 'Warehouse';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = WAREHOUSES;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
   }
 }
 

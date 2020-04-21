@@ -17,6 +17,35 @@
         },
         "RawSnowflake": {
             "properties": {
+                "AccountPrivilegeGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
                 "Database": {
                     "properties": {
                         "comment": {
@@ -134,7 +163,59 @@
                     },
                     "type": "object"
                 },
-                "Grant": {
+                "FutureDatabaseGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "grant_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "FutureSchemaGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "grant_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "GlobalGrant": {
                     "properties": {
                         "created_on": {
                             "type": "string"
@@ -206,6 +287,75 @@
                             "type": "string"
                         },
                         "url": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "OfRoleGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "OfShareGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "share": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "OnObjectGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
                             "type": "string"
                         }
                     },
@@ -513,7 +663,7 @@
                             "type": "string"
                         },
                         "retention_time": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "rows": {
                             "type": "number"
@@ -567,6 +717,81 @@
                             "type": "string"
                         },
                         "warehouse": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ToRolePrivilegeGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "type": "boolean"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ToShareGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ToUserPrivilegeGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "role": {
                             "type": "string"
                         }
                     },
