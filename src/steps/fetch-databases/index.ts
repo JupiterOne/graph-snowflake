@@ -17,6 +17,11 @@ interface SnowflakeDatabaseEntityData extends IntegrationEntityData {
   source: RawDatabase;
 }
 
+// DO NOT CHANGE THIS UNLESS YOU KNOW WHAT YOU ARE DOING
+function buildKey(rawDatabase: RawDatabase): string {
+  return `snowflake-database:${rawDatabase.name}`;
+}
+
 function convertDatabase(
   rawDatabase: RawDatabase,
 ): SnowflakeDatabaseEntityData {
@@ -33,8 +38,9 @@ function convertDatabase(
     assign: {
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_database',
-      _key: `snowflake-database:${name}`,
+      _key: buildKey(rawDatabase),
       displayName: name,
+      name,
       createdOn: getTime(createdOnStr),
       comment,
       owner,
@@ -77,6 +83,7 @@ const step: IntegrationStep = {
       logger.info('Done fetching databases.');
     } catch (error) {
       logger.error({ error }, 'Error executing step');
+      throw error;
     } finally {
       try {
         if (client) {
