@@ -11,7 +11,7 @@ let recording: Recording;
 beforeEach(() => {
   recording = setupDefaultRecording({
     directory: __dirname,
-    name: 'fetch database',
+    name: 'fetch databases',
   });
 });
 
