@@ -16,6 +16,28 @@ async function iterableToArray<T = any>(it: AsyncIterable<T>): Promise<T[]> {
   return results;
 }
 
+function redactRequestData(data: any) {
+  const accountName = data['ACCOUNT_NAME'];
+  const loginName = data['LOGIN_NAME'];
+  const password = data['PASSWORD'];
+  if (accountName) {
+    data['ACCOUNT_NAME'] = '[REDACTED]';
+  }
+  if (loginName) {
+    data['LOGIN_NAME'] = '[REDACTED]';
+  }
+  if (password) {
+    data['PASSWORD'] = '[REDACTED]';
+  }
+  const environment = data['CLIENT_ENVIRONMENT'];
+  if (environment) {
+    for (const key of Object.keys(environment)) {
+      environment[key] = '[REDACTED]';
+    }
+  }
+  return data;
+}
+
 function setupDefaultRecording({
   directory,
   name,
@@ -35,18 +57,8 @@ function setupDefaultRecording({
           const json = JSON.parse(unzippedBody.toString());
           if (json.data && typeof json.data === 'object') {
             const data = json.data;
-            const accountName = data['ACCOUNT_NAME'];
-            const loginName = data['LOGIN_NAME'];
-            const password = data['PASSWORD'];
-            if (accountName) {
-              data['ACCOUNT_NAME'] = '[REDACTED]';
-            }
-            if (loginName) {
-              data['LOGIN_NAME'] = '[REDACTED]';
-            }
-            if (password) {
-              data['PASSWORD'] = '[REDACTED]';
-            }
+            const redactedData = redactRequestData(data);
+            json.data = redactedData;
           }
           return JSON.stringify(json);
         },
@@ -94,19 +106,8 @@ function redactPollyEntry(entry: any): void {
     const requestJson = JSON.parse(requestText);
     if (requestJson.data) {
       const data = requestJson.data;
-      const accountName = data['ACCOUNT_NAME'];
-      const loginName = data['LOGIN_NAME'];
-      const password = data['PASSWORD'];
-      if (accountName) {
-        data['ACCOUNT_NAME'] = '[REDACTED]';
-      }
-      if (loginName) {
-        data['LOGIN_NAME'] = '[REDACTED]';
-      }
-      if (password) {
-        data['PASSWORD'] = '[REDACTED]';
-      }
-      entry.request.postData.text = JSON.stringify({ data });
+      const redactedData = redactRequestData(data);
+      entry.request.postData.text = JSON.stringify({ data: redactedData });
     }
   } else {
     console.log('Heres what request looks like: ', entry.request);
