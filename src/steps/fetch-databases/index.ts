@@ -4,12 +4,13 @@ import {
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
+  createIntegrationRelationship,
 } from '@jupiterone/integration-sdk';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeDatabase } from '../../types';
+import { SnowflakeDatabase, SnowflakeWarehouse } from '../../types';
 
 type RawDatabase = RawSnowflake['Database'];
 interface SnowflakeDatabaseEntityData extends IntegrationEntityData {
@@ -24,6 +25,7 @@ function buildKey(rawDatabase: RawDatabase): string {
 
 function convertDatabase(
   rawDatabase: RawDatabase,
+  currentWarehouse: string,
 ): SnowflakeDatabaseEntityData {
   const {
     name,
@@ -55,6 +57,7 @@ function convertDatabase(
       retentionTimeInDays: isNaN(retentionTimeInDays)
         ? retentionTimeInDays
         : null,
+      warehouseName: currentWarehouse,
     },
     source: rawDatabase,
   };
@@ -71,15 +74,27 @@ const step: IntegrationStep = {
   }: IntegrationStepExecutionContext) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
+    const warehouseMap = new Map<string, SnowflakeWarehouse | undefined>();
     const databases: SnowflakeDatabaseEntityData[] = [];
     try {
       client = await createClient({ ...config, logger });
       logger.info('Fetching databases...');
 
-      for await (const rawDatabase of client.fetchDatabases()) {
-        const snowflakeDatabase = convertDatabase(rawDatabase);
-        databases.push(snowflakeDatabase);
-      }
+      await jobState.iterateEntities(
+        { _type: 'snowflake_warehouse' },
+        async (warehouse: SnowflakeWarehouse) => {
+          warehouseMap.set(warehouse.name, warehouse);
+          await client.setWarehouse(warehouse.name);
+          for await (const rawDatabase of client.fetchDatabases()) {
+            const snowflakeDatabase = convertDatabase(
+              rawDatabase,
+              warehouse.name,
+            );
+            databases.push(snowflakeDatabase);
+          }
+        },
+      );
+
       logger.info('Done fetching databases.');
     } catch (error) {
       logger.error({ error }, 'Error executing step');
@@ -93,12 +108,25 @@ const step: IntegrationStep = {
         logger.error({ error }, 'Failed to destroy snowflake client');
       }
     }
-    // shoop de doop
+
     await jobState.addEntities(
       databases.map((database) =>
         createIntegrationEntity({ entityData: database }),
       ),
     );
+
+    for (const database of databases) {
+      const { assign: databaseEntity } = database;
+      const { warehouseName } = databaseEntity;
+      const warehouse = warehouseMap.get(warehouseName);
+      await jobState.addRelationships([
+        createIntegrationRelationship({
+          _class: 'HAS',
+          from: warehouse,
+          to: databaseEntity,
+        }),
+      ]);
+    }
   },
 };
 
