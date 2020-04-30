@@ -33,6 +33,8 @@ function setupDefaultRecording({
         body: true,
         url: {
           query: false,
+          hostname: false,
+          pathname: true,
         },
       },
     },
