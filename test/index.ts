@@ -27,10 +27,29 @@ function setupDefaultRecording({
     directory,
     mutateEntry: redactPollyEntry,
     mutateRequest: unZipRequestBody,
-    name: name,
+    name,
     options: {
       matchRequestsBy: {
-        body: true,
+        body: (body: any) => {
+          const unzippedBody = unzip(body);
+          const json = JSON.parse(unzippedBody.toString());
+          if (json.data && typeof json.data === 'object') {
+            const data = json.data;
+            const accountName = data['ACCOUNT_NAME'];
+            const loginName = data['LOGIN_NAME'];
+            const password = data['PASSWORD'];
+            if (accountName) {
+              data['ACCOUNT_NAME'] = '[REDACTED]';
+            }
+            if (loginName) {
+              data['LOGIN_NAME'] = '[REDACTED]';
+            }
+            if (password) {
+              data['PASSWORD'] = '[REDACTED]';
+            }
+          }
+          return JSON.stringify(json);
+        },
         url: {
           query: false,
           hostname: false,
@@ -57,25 +76,54 @@ function unZipRequestBody(request: any): void {
   const contentEncoding = request.getHeader('content-encoding');
   if (contentEncoding === 'gzip') {
     request.removeHeader('content-encoding');
-    const unzippedBody = zlib.unzipSync(request.body);
+    const unzippedBody = unzip(request.body);
     request.body = unzippedBody.toString();
     request.setHeader('content-length', unzippedBody.byteLength);
   }
 }
 
-function redactPollyEntry(entry: any): void {
-  const text = entry.response.content.text;
+function unzip(zipped: any) {
+  const unzippedBody = zlib.unzipSync(zipped);
+  return unzippedBody;
+}
 
-  const json = JSON.parse(text);
-  if (json.data) {
-    if (json.data.masterToken) {
-      json.data.masterToken = '[REDACTED]';
+function redactPollyEntry(entry: any): void {
+  const requestPostData = entry.request.postData;
+  if (requestPostData && requestPostData.text) {
+    const requestText = entry.request.postData.text;
+    const requestJson = JSON.parse(requestText);
+    if (requestJson.data) {
+      const data = requestJson.data;
+      const accountName = data['ACCOUNT_NAME'];
+      const loginName = data['LOGIN_NAME'];
+      const password = data['PASSWORD'];
+      if (accountName) {
+        data['ACCOUNT_NAME'] = '[REDACTED]';
+      }
+      if (loginName) {
+        data['LOGIN_NAME'] = '[REDACTED]';
+      }
+      if (password) {
+        data['PASSWORD'] = '[REDACTED]';
+      }
+      entry.request.postData.text = JSON.stringify({ data });
     }
-    if (json.data.token) {
-      json.data.token = '[REDACTED]';
+  } else {
+    console.log('Heres what request looks like: ', entry.request);
+  }
+
+  const responseText = entry.response.content.text;
+
+  const responseJson = JSON.parse(responseText);
+  if (responseJson.data) {
+    if (responseJson.data.masterToken) {
+      responseJson.data.masterToken = '[REDACTED]';
+    }
+    if (responseJson.data.token) {
+      responseJson.data.token = '[REDACTED]';
     }
   }
-  entry.response.content.text = JSON.stringify(json);
+  entry.response.content.text = JSON.stringify(responseJson);
 }
 
 export {
