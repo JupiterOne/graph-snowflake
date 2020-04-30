@@ -52,6 +52,9 @@ function setupDefaultRecording({
     name,
     options: {
       matchRequestsBy: {
+        method: true,
+        headers: false,
+        order: false,
         body: (body: any) => {
           const unzippedBody = unzip(body);
           const json = JSON.parse(unzippedBody.toString());
@@ -64,8 +67,14 @@ function setupDefaultRecording({
         },
         url: {
           query: false,
-          hostname: false,
           pathname: true,
+
+          hostname: false,
+          protocol: false,
+          username: false,
+          password: false,
+          port: false,
+          hash: false,
         },
       },
     },
@@ -109,8 +118,6 @@ function redactPollyEntry(entry: any): void {
       const redactedData = redactRequestData(data);
       entry.request.postData.text = JSON.stringify({ data: redactedData });
     }
-  } else {
-    console.log('Heres what request looks like: ', entry.request);
   }
 
   const responseText = entry.response.content.text;
@@ -122,6 +129,9 @@ function redactPollyEntry(entry: any): void {
     }
     if (responseJson.data.token) {
       responseJson.data.token = '[REDACTED]';
+    }
+    if (responseJson.data.sessionId) {
+      responseJson.data.sessionId = '[REDACTED]';
     }
   }
   entry.response.content.text = JSON.stringify(responseJson);
