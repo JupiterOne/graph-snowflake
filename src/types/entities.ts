@@ -10,6 +10,15 @@ export interface SnowflakeDatabase extends Entity {
   classification: string;
   encrypted: true;
   retentionTimeInDays: number | null;
+  warehouseName: string;
+}
+
+export interface SnowflakeWarehouse extends Entity {
+  _class: ['DataStore', 'Database'];
+  _type: 'snowflake_warehouse';
+  name: string;
+  classification: 'unknown';
+  encrypted: true;
 }
 
 export interface SnowflakeAccount extends Entity {
