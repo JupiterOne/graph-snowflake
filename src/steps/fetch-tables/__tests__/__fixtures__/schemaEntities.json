@@ -1,0 +1,30 @@
+[
+  {
+    "name": "TEST_SCHEMA",
+    "owner": "ACCOUNTADMIN",
+    "_class": ["DataStore", "Database"],
+    "_type": "snowflake_schema",
+    "_key": "snowflake-schema:TEST_SCHEMA",
+    "createdOn": 0,
+    "databaseName": "TEST_DB",
+    "classification": "unknown",
+    "encrypted": true,
+    "displayName": "TEST_SCHEMA",
+    "_rawData": [
+      {
+        "name": "default",
+        "rawData": {
+          "created_on": "0",
+          "name": "TEST_SCHEMA",
+          "is_default": "N",
+          "is_current": "N",
+          "database_name": "TEST_DB",
+          "owner": "ACCOUNTADMIN",
+          "comment": "test-schema",
+          "options": "",
+          "retention_time": "1"
+        }
+      }
+    ]
+  }
+]

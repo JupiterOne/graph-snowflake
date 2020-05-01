@@ -252,7 +252,7 @@ export type RawSnowflake = {
     owner: string;
     last_success_login: string;
     expires_at_time: string;
-    locked_until_time: string | null;
+    locked_until_time: string | 'NULL';
     has_password: BoolStr;
     has_rsa_public_key: BoolStr;
   };

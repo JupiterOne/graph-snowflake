@@ -16,6 +16,28 @@ async function iterableToArray<T = any>(it: AsyncIterable<T>): Promise<T[]> {
   return results;
 }
 
+function redactRequestData(data: any) {
+  const accountName = data['ACCOUNT_NAME'];
+  const loginName = data['LOGIN_NAME'];
+  const password = data['PASSWORD'];
+  if (accountName) {
+    data['ACCOUNT_NAME'] = '[REDACTED]';
+  }
+  if (loginName) {
+    data['LOGIN_NAME'] = '[REDACTED]';
+  }
+  if (password) {
+    data['PASSWORD'] = '[REDACTED]';
+  }
+  const environment = data['CLIENT_ENVIRONMENT'];
+  if (environment) {
+    for (const key of Object.keys(environment)) {
+      environment[key] = '[REDACTED]';
+    }
+  }
+  return data;
+}
+
 function setupDefaultRecording({
   directory,
   name,
@@ -27,12 +49,32 @@ function setupDefaultRecording({
     directory,
     mutateEntry: redactPollyEntry,
     mutateRequest: unZipRequestBody,
-    name: name,
+    name,
     options: {
       matchRequestsBy: {
-        body: true,
+        method: true,
+        headers: false,
+        order: false,
+        body: (body: any) => {
+          const unzippedBody = unzip(body);
+          const json = JSON.parse(unzippedBody.toString());
+          if (json.data && typeof json.data === 'object') {
+            const data = json.data;
+            const redactedData = redactRequestData(data);
+            json.data = redactedData;
+          }
+          return JSON.stringify(json);
+        },
         url: {
+          pathname: true,
           query: false,
+
+          hostname: false,
+          protocol: false,
+          username: false,
+          password: false,
+          port: false,
+          hash: false,
         },
       },
     },
@@ -55,25 +97,44 @@ function unZipRequestBody(request: any): void {
   const contentEncoding = request.getHeader('content-encoding');
   if (contentEncoding === 'gzip') {
     request.removeHeader('content-encoding');
-    const unzippedBody = zlib.unzipSync(request.body);
+    const unzippedBody = unzip(request.body);
     request.body = unzippedBody.toString();
     request.setHeader('content-length', unzippedBody.byteLength);
   }
 }
 
-function redactPollyEntry(entry: any): void {
-  const text = entry.response.content.text;
+function unzip(zipped: any) {
+  const unzippedBody = zlib.unzipSync(zipped);
+  return unzippedBody;
+}
 
-  const json = JSON.parse(text);
-  if (json.data) {
-    if (json.data.masterToken) {
-      json.data.masterToken = '[REDACTED]';
-    }
-    if (json.data.token) {
-      json.data.token = '[REDACTED]';
+function redactPollyEntry(entry: any): void {
+  const requestPostData = entry.request.postData;
+  if (requestPostData && requestPostData.text) {
+    const requestText = entry.request.postData.text;
+    const requestJson = JSON.parse(requestText);
+    if (requestJson.data) {
+      const data = requestJson.data;
+      const redactedData = redactRequestData(data);
+      entry.request.postData.text = JSON.stringify({ data: redactedData });
     }
   }
-  entry.response.content.text = JSON.stringify(json);
+
+  const responseText = entry.response.content.text;
+
+  const responseJson = JSON.parse(responseText);
+  if (responseJson.data) {
+    if (responseJson.data.masterToken) {
+      responseJson.data.masterToken = '[REDACTED]';
+    }
+    if (responseJson.data.token) {
+      responseJson.data.token = '[REDACTED]';
+    }
+    if (responseJson.data.sessionId) {
+      responseJson.data.sessionId = '[REDACTED]';
+    }
+  }
+  entry.response.content.text = JSON.stringify(responseJson);
 }
 
 export {
