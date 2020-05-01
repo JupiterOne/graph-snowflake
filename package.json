@@ -4,7 +4,7 @@
   "description": "A JupiterOne Integration",
   "license": "MPL-2.0",
   "scripts": {
-    "generate-schemas": "yarn typescript-json-schema ./src/client/types.ts \"*\" -o src/client/schemas/index.json",
+    "generate-schemas": "yarn typescript-json-schema ./src/client/types.ts \"*\" -o src/client/__generated__/schemas/index.json",
     "prestart": "yarn generate-schemas",
     "start": "j1-integration collect",
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
@@ -12,7 +12,7 @@
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "test:ci": "yarn lint && yarn type-check && yarn test",
-    "prebuild": "yarn test:ci",
+    "prebuild": "yarn generate-schemas && yarn test:ci",
     "build": "tsc -p tsconfig.dist.json --declaration",
     "graph": "j1-integration visualize"
   },

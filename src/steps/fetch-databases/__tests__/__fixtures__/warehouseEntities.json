@@ -1,0 +1,14 @@
+[
+  {
+    "name": "COMPUTE_WH",
+    "owner": "SYSADMIN",
+    "_class": ["DataStore", "Database"],
+    "_type": "snowflake_warehouse",
+    "_key": "snowflake-warehouse:COMPUTE_WH",
+    "createdOn": 1586889626796,
+    "classification": "unknown",
+    "encrypted": true,
+    "displayName": "COMPUTE_WH",
+    "_rawData": []
+  }
+]
