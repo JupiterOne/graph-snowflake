@@ -1,4 +1,5 @@
 import { Entity } from '@jupiterone/integration-sdk';
+import { RawSnowflake } from '../client/types';
 
 export interface SnowflakeUser extends Entity {
   _class: ['User'];
