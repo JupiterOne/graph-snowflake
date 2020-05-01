@@ -1,0 +1,12 @@
+[
+  {
+    "_class": [
+      "Account"
+    ],
+    "_type": "snowflake_account",
+    "_key": "snowflake-account:upa06479.us-east-1",
+    "name": "upa06479.us-east-1",
+    "_rawData": [],
+    "displayName": "upa06479.us-east-1"
+  }
+]
