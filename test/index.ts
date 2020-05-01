@@ -59,14 +59,19 @@ function setupDefaultRecording({
           if (req.pathname === '/session/v1/login-request') {
             return JSON.stringify({ data: {} });
           }
-          const unzippedBody = unzip(body);
-          const json = JSON.parse(unzippedBody.toString());
-          if (json.data && typeof json.data === 'object') {
-            const data = json.data;
-            const redactedData = redactRequestData(data);
-            json.data = redactedData;
+          try {
+            const unzippedBody = unzip(body);
+            const json = JSON.parse(unzippedBody.toString());
+            if (json.data && typeof json.data === 'object') {
+              const data = json.data;
+              const redactedData = redactRequestData(data);
+              json.data = redactedData;
+            }
+            return JSON.stringify(json);
+          } catch (err) {
+            // don't throw, might not be a zipped body.
+            return body;
           }
-          return JSON.stringify(json);
         },
         url: {
           pathname: true,
@@ -99,10 +104,14 @@ function setupDefaultRecording({
 function unZipRequestBody(request: any): void {
   const contentEncoding = request.getHeader('content-encoding');
   if (contentEncoding === 'gzip') {
-    request.removeHeader('content-encoding');
-    const unzippedBody = unzip(request.body);
-    request.body = unzippedBody.toString();
-    request.setHeader('content-length', unzippedBody.byteLength);
+    try {
+      const unzippedBody = unzip(request.body);
+      request.removeHeader('content-encoding');
+      request.body = unzippedBody.toString();
+      request.setHeader('content-length', unzippedBody.byteLength);
+    } catch (err) {
+      // dont throw, might just not be unzippable
+    }
   }
 }
 
