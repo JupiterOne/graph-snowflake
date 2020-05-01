@@ -55,7 +55,10 @@ function setupDefaultRecording({
         method: true,
         headers: false,
         order: false,
-        body: (body: any) => {
+        body: (body: any, req: any) => {
+          if (req.pathname === '/session/v1/login-request') {
+            return JSON.stringify({ data: {} });
+          }
           const unzippedBody = unzip(body);
           const json = JSON.parse(unzippedBody.toString());
           if (json.data && typeof json.data === 'object') {
