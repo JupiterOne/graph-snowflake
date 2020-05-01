@@ -3,6 +3,12 @@
   "version": "0.0.0",
   "description": "A JupiterOne Integration",
   "license": "MPL-2.0",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "generate-schemas": "yarn typescript-json-schema ./src/client/types.ts \"*\" -o src/client/__generated__/schemas/index.json",
     "prestart": "yarn generate-schemas",
