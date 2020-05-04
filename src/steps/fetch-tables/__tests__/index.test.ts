@@ -33,7 +33,7 @@ test('step collects and processes data', async () => {
     owner: 'ACCOUNTADMIN',
     _class: ['DataStore', 'Database'],
     _type: 'snowflake_table',
-    _key: 'snowflake-table:TEST_DB:TEST_SCHEMA:TEST_TABLE',
+    _key: 'snowflake-table:COMPUTE_WH:TEST_DB:TEST_SCHEMA:TEST_TABLE',
     createdOn: expect.any(Number),
     itemCount: expect.any(Number),
     displayName: 'TEST_TABLE',
@@ -45,6 +45,7 @@ test('step collects and processes data', async () => {
     droppedOn: null,
     classification: 'unknown',
     encrypted: true,
+    warehouseName: 'COMPUTE_WH',
     databaseName: 'TEST_DB',
     schemaName: 'TEST_SCHEMA',
     automaticClustering: true,
@@ -74,14 +75,14 @@ test('step collects and processes data', async () => {
   const testTableToTestSchema = context.jobState.collectedRelationships.find(
     (r) =>
       r._key ===
-      'snowflake-schema:TEST_SCHEMA|has|snowflake-table:TEST_DB:TEST_SCHEMA:TEST_TABLE',
+      'snowflake-schema:TEST_SCHEMA|has|snowflake-table:COMPUTE_WH:TEST_DB:TEST_SCHEMA:TEST_TABLE',
   );
   expect(testTableToTestSchema).toEqual({
     _class: 'HAS',
     _fromEntityKey: 'snowflake-schema:TEST_SCHEMA',
     _key:
-      'snowflake-schema:TEST_SCHEMA|has|snowflake-table:TEST_DB:TEST_SCHEMA:TEST_TABLE',
-    _toEntityKey: 'snowflake-table:TEST_DB:TEST_SCHEMA:TEST_TABLE',
+      'snowflake-schema:TEST_SCHEMA|has|snowflake-table:COMPUTE_WH:TEST_DB:TEST_SCHEMA:TEST_TABLE',
+    _toEntityKey: 'snowflake-table:COMPUTE_WH:TEST_DB:TEST_SCHEMA:TEST_TABLE',
     _type: 'snowflake_schema_has_table',
     displayName: 'HAS',
   });

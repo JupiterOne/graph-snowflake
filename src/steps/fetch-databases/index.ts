@@ -19,8 +19,8 @@ interface SnowflakeDatabaseEntityData extends IntegrationEntityData {
 }
 
 // DO NOT CHANGE THIS UNLESS YOU KNOW WHAT YOU ARE DOING
-function buildKey(rawDatabase: RawDatabase): string {
-  return `snowflake-database:${rawDatabase.name}`;
+function buildKey(rawDatabase: RawDatabase, currentWarehouse: string): string {
+  return `snowflake-database:${currentWarehouse}:${rawDatabase.name}`;
 }
 
 function convertDatabase(
@@ -40,7 +40,7 @@ function convertDatabase(
     assign: {
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_database',
-      _key: buildKey(rawDatabase),
+      _key: buildKey(rawDatabase, currentWarehouse),
       displayName: name,
       name,
       createdOn: getTime(createdOnStr),

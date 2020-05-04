@@ -29,7 +29,10 @@ test('step collects and processes data', async () => {
   // demo account. Should be two, check for the built in user
   // because that should be stable enough.
   expect(context.jobState.collectedEntities).toHaveLength(2);
-  expect(context.jobState.collectedEntities).toContainEqual({
+  const defaultSnowflakeUser = context.jobState.collectedEntities.find(
+    (e) => e.name === 'SNOWFLAKE',
+  );
+  expect(defaultSnowflakeUser).toEqual({
     name: 'SNOWFLAKE',
     owner: '',
     _class: ['User'],

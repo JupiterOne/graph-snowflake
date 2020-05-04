@@ -34,8 +34,9 @@ test('step collects and processes data', async () => {
     owner: 'ACCOUNTADMIN',
     _class: ['DataStore', 'Database'],
     _type: 'snowflake_schema',
-    _key: 'snowflake-schema:TEST_SCHEMA',
+    _key: 'snowflake-schema:COMPUTE_WH:TEST_DB:TEST_SCHEMA',
     createdOn: expect.any(Number),
+    warehouseName: 'COMPUTE_WH',
     databaseName: 'TEST_DB',
     classification: 'unknown',
     encrypted: true,
@@ -59,14 +60,16 @@ test('step collects and processes data', async () => {
   });
   const testDbToSchemaRel = context.jobState.collectedRelationships.find(
     (r) =>
-      r._key === 'snowflake-database:TEST_DB|has|snowflake-schema:TEST_SCHEMA',
+      r._key ===
+      'snowflake-database:TEST_DB|has|snowflake-schema:COMPUTE_WH:TEST_DB:TEST_SCHEMA',
   );
   expect(testDbToSchemaRel).toEqual({
-    _key: 'snowflake-database:TEST_DB|has|snowflake-schema:TEST_SCHEMA',
+    _key:
+      'snowflake-database:TEST_DB|has|snowflake-schema:COMPUTE_WH:TEST_DB:TEST_SCHEMA',
     _type: 'snowflake_database_has_schema',
     _class: 'HAS',
     _fromEntityKey: 'snowflake-database:TEST_DB',
-    _toEntityKey: 'snowflake-schema:TEST_SCHEMA',
+    _toEntityKey: 'snowflake-schema:COMPUTE_WH:TEST_DB:TEST_SCHEMA',
     displayName: 'HAS',
   });
 });

@@ -33,7 +33,7 @@ test('step collects and processes data', async () => {
   );
   expect(testDbEntity).toEqual({
     _class: ['DataStore', 'Database'],
-    _key: 'snowflake-database:TEST_DB',
+    _key: 'snowflake-database:COMPUTE_WH:TEST_DB',
     _rawData: expect.anything(),
     _type: 'snowflake_database',
     classification: 'unknown',
@@ -51,14 +51,15 @@ test('step collects and processes data', async () => {
   const computWHToTestDBRel = context.jobState.collectedRelationships.find(
     (r) =>
       r._key ===
-      'snowflake-warehouse:COMPUTE_WH|has|snowflake-database:TEST_DB',
+      'snowflake-warehouse:COMPUTE_WH|has|snowflake-database:COMPUTE_WH:TEST_DB',
   );
   expect(computWHToTestDBRel).toEqual({
     _class: 'HAS',
     _type: expect.any(String),
-    _key: 'snowflake-warehouse:COMPUTE_WH|has|snowflake-database:TEST_DB',
+    _key:
+      'snowflake-warehouse:COMPUTE_WH|has|snowflake-database:COMPUTE_WH:TEST_DB',
     _fromEntityKey: 'snowflake-warehouse:COMPUTE_WH',
-    _toEntityKey: 'snowflake-database:TEST_DB',
+    _toEntityKey: 'snowflake-database:COMPUTE_WH:TEST_DB',
     displayName: 'HAS',
   });
 });
