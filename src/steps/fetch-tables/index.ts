@@ -18,16 +18,19 @@ interface SnowflakeTableEntityData extends IntegrationEntityData {
   source: RawTable;
 }
 
-function buildKey(rawTable: RawTable): string {
+function buildKey(rawTable: RawTable, warehouseName: string): string {
   const {
     name,
     database_name: databaseName,
     schema_name: schemaName,
   } = rawTable;
-  return `snowflake-table:${databaseName}:${schemaName}:${name}`;
+  return `snowflake-table:${warehouseName}:${databaseName}:${schemaName}:${name}`;
 }
 
-function convertTable(rawTable: RawTable): SnowflakeTableEntityData {
+function convertTable(
+  rawTable: RawTable,
+  warehouseName: string,
+): SnowflakeTableEntityData {
   const {
     created_on: createdOnStr,
     rows,
@@ -49,7 +52,7 @@ function convertTable(rawTable: RawTable): SnowflakeTableEntityData {
     assign: {
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_table',
-      _key: buildKey(rawTable),
+      _key: buildKey(rawTable, warehouseName),
       createdOn: getTime(createdOnStr),
       itemCount: rows,
       displayName: name,
@@ -67,6 +70,7 @@ function convertTable(rawTable: RawTable): SnowflakeTableEntityData {
       // according to: https://docs.snowflake.com/en/user-guide/security-encryption.html
       // "In Snowflake, all data at rest is always encrypted."
       encrypted: true,
+      warehouseName,
       databaseName,
       schemaName,
       automaticClustering: automaticClusteringStr === 'ON',
@@ -99,10 +103,11 @@ const step: IntegrationStep = {
         { _type: 'snowflake_schema' },
         async (schema: SnowflakeSchema) => {
           schemaMap.set(schema.name, schema);
+          await client.setWarehouse(schema.warehouseName);
           await client.setDatabase(schema.databaseName);
           await client.setSchema(schema.name);
           for await (const rawTable of client.fetchTables()) {
-            const snowflakeTable = convertTable(rawTable);
+            const snowflakeTable = convertTable(rawTable, schema.warehouseName);
             tables.push(snowflakeTable);
           }
         },

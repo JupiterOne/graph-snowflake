@@ -18,21 +18,25 @@ interface SnowflakeSchemaEntityData extends IntegrationEntityData {
   source: RawSchema;
 }
 
-function buildKey(raw: RawSchema): string {
+function buildKey(raw: RawSchema, warehouseName: string): string {
   const { name } = raw;
-  return `snowflake-schema:${name}`;
+  return `snowflake-schema:${warehouseName}:${raw.database_name}:${name}`;
 }
 
-function convertSchema(raw: RawSchema): SnowflakeSchemaEntityData {
+function convertSchema(
+  raw: RawSchema,
+  warehouseName: string,
+): SnowflakeSchemaEntityData {
   const { created_on: createdOnStr, name, database_name: databaseName } = raw;
 
   return {
     assign: {
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_schema',
-      _key: buildKey(raw),
+      _key: buildKey(raw, warehouseName),
       createdOn: getTime(createdOnStr),
       databaseName,
+      warehouseName,
       classification: 'unknown',
       encrypted: true,
       displayName: name,
@@ -63,9 +67,10 @@ const step: IntegrationStep = {
         { _type: 'snowflake_database' },
         async (database: SnowflakeDatabase) => {
           databaseMap.set(database.name, database);
+          await client.setWarehouse(database.warehouseName);
           await client.setDatabase(database.name);
           for await (const rawSchema of client.fetchSchemas()) {
-            const schemaData = convertSchema(rawSchema);
+            const schemaData = convertSchema(rawSchema, database.warehouseName);
             schemas.push(schemaData);
           }
         },

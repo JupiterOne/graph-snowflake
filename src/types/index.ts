@@ -57,6 +57,7 @@ export interface SnowflakeSchema extends Entity {
   _type: 'snowflake_schema';
   name: string;
   databaseName: string;
+  warehouseName: string;
   classification: 'unknown';
   encrypted: true;
 }
@@ -64,6 +65,7 @@ export interface SnowflakeSchema extends Entity {
 export interface SnowflakeTable extends Entity {
   _class: ['DataStore', 'Database'];
   _type: 'snowflake_table';
+  warehouseName: string;
   databaseName: string;
   schemaName: string;
   createdOn: number;
