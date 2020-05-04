@@ -6,6 +6,7 @@ import {
 } from '@jupiterone/integration-sdk/testing';
 import { setupDefaultRecording } from '../../../../test';
 import schemaEntities from './__fixtures__/schemaEntities.json';
+import informationSchemaEntites from './__fixtures__/informationSchemaEntities.json';
 
 import step from '../';
 
@@ -86,4 +87,13 @@ test('step collects and processes data', async () => {
     _type: 'snowflake_schema_has_table',
     displayName: 'HAS',
   });
+});
+
+test('skips information schema for collecting tables', async () => {
+  const context = createMockStepExecutionContext({
+    entities: informationSchemaEntites,
+  });
+  await step.executionHandler(context);
+  expect(context.jobState.collectedEntities).toEqual([]);
+  expect(context.jobState.collectedRelationships).toEqual([]);
 });
