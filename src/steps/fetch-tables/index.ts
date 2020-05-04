@@ -102,6 +102,16 @@ const step: IntegrationStep = {
       await jobState.iterateEntities(
         { _type: 'snowflake_schema' },
         async (schema: SnowflakeSchema) => {
+          // per: https://docs.snowflake.com/en/sql-reference/info-schema.html
+          // the `INFORMATION_SCHEMA` is a system defined schema which provides
+          // nice views for metadata that probably should have been
+          // used for this whole integration... (hindsight 20/20)
+          // That being said,
+          // querying for `SHOW TABLES` on this schema produces duplicate
+          // values so we skip ingesting tables for it.
+          if (schema.name === 'INFORMATION_SCHEMA') {
+            return;
+          }
           schemaMap.set(schema.name, schema);
           await client.setWarehouse(schema.warehouseName);
           await client.setDatabase(schema.databaseName);
