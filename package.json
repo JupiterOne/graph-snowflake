@@ -3,6 +3,8 @@
   "version": "0.1.4",
   "description": "A graph conversion tool for https://www.snowflake.com/.",
   "license": "MPL-2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -24,7 +26,7 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@jupiterone/integration-sdk": "^0.16.2",
+    "@jupiterone/integration-sdk": "^1.0.0",
     "ajv": "^6.12.2",
     "snowflake-sdk": "^1.5.1"
   },
