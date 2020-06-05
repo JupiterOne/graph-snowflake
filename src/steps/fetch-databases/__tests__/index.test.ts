@@ -3,11 +3,19 @@
 import {
   createMockStepExecutionContext,
   Recording,
-} from '@jupiterone/integration-sdk/testing';
+} from '@jupiterone/integration-sdk-testing';
 import { setupDefaultRecording } from '../../../../test';
 import step from '../';
 
 import warehouseEntities from './__fixtures__/warehouseEntities.json';
+import { SnowflakeIntegrationConfig } from '../../../types';
+
+const instanceConfig: SnowflakeIntegrationConfig = {
+  account: 'snowflake-account',
+  password: 'snowflake-password',
+  role: 'snowflake-role',
+  username: 'snowflake-username'
+};
 
 let recording: Recording;
 beforeEach(() => {
@@ -24,6 +32,7 @@ afterEach(async () => {
 test('step collects and processes data', async () => {
   const context = createMockStepExecutionContext({
     entities: warehouseEntities,
+    instanceConfig
   });
   await step.executionHandler(context);
 

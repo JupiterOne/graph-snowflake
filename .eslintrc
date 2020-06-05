@@ -1,29 +1,7 @@
 {
+  "root": true,
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:jest/recommended",
-    "plugin:prettier/recommended"
+    "./node_modules/@jupiterone/integration-sdk-dev-tools/config/eslint.json"
   ],
-  "env": {
-    "node": true,
-    "es6": true
-  },
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "rules": {
-    "@typescript-eslint/no-use-before-define": [
-      "error",
-      {
-        "functions": false
-      }
-    ],
-    "@typescript-eslint/explicit-function-return-type": [
-      "off"
-    ],
-    "@typescript-eslint/no-explicit-any": [
-      "off"
-    ]
-  }
+  
 }

@@ -1,16 +1,16 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+  Entity,
+} from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeSchema, SnowflakeDatabase } from '../../types';
+import { SnowflakeSchema, SnowflakeDatabase, SnowflakeIntegrationConfig } from '../../types';
 
 type RawSchema = RawSnowflake['Schema'];
 interface SnowflakeSchemaEntityData extends IntegrationEntityData {
@@ -46,7 +46,7 @@ function convertSchema(
   };
 }
 
-const step: IntegrationStep = {
+const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-schemas',
   name: 'Fetch Schemas',
   types: ['snowflake_schema'],
@@ -55,7 +55,7 @@ const step: IntegrationStep = {
     logger,
     jobState,
     instance,
-  }: IntegrationStepExecutionContext) {
+  }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const databaseMap = new Map<string, SnowflakeDatabase | undefined>();
@@ -65,13 +65,18 @@ const step: IntegrationStep = {
       logger.info('Fetching schemas...');
       await jobState.iterateEntities(
         { _type: 'snowflake_database' },
-        async (database: SnowflakeDatabase) => {
-          databaseMap.set(database.name, database);
-          await client.setWarehouse(database.warehouseName);
-          await client.setDatabase(database.name);
-          for await (const rawSchema of client.fetchSchemas()) {
-            const schemaData = convertSchema(rawSchema, database.warehouseName);
-            schemas.push(schemaData);
+        async (database: Entity) => {
+          const snowflakeDatabase = database as SnowflakeDatabase;
+
+          databaseMap.set(snowflakeDatabase.name, snowflakeDatabase);
+
+          if(client) {
+            await client.setWarehouse(snowflakeDatabase.warehouseName);
+            await client.setDatabase(snowflakeDatabase.name);
+            for await (const rawSchema of client.fetchSchemas()) {
+              const schemaData = convertSchema(rawSchema, snowflakeDatabase.warehouseName);
+              schemas.push(schemaData);
+            }
           }
         },
       );

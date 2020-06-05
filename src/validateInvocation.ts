@@ -1,4 +1,4 @@
-import { IntegrationExecutionContext } from '@jupiterone/integration-sdk';
+import { IntegrationExecutionContext } from '@jupiterone/integration-sdk-core';
 import { createClient } from './client';
 
 export default async function validateInvocation(
