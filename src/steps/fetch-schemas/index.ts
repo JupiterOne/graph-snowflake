@@ -67,16 +67,11 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
         async (database: SnowflakeDatabase) => {
           databaseMap.set(database.name, database);
 
-          if (client) {
-            await client.setWarehouse(database.warehouseName);
-            await client.setDatabase(database.name);
-            for await (const rawSchema of client.fetchSchemas()) {
-              const schemaData = convertSchema(
-                rawSchema,
-                database.warehouseName,
-              );
-              schemas.push(schemaData);
-            }
+          await client!.setWarehouse(database.warehouseName);
+          await client!.setDatabase(database.name);
+          for await (const rawSchema of client!.fetchSchemas()) {
+            const schemaData = convertSchema(rawSchema, database.warehouseName);
+            schemas.push(schemaData);
           }
         },
       );

@@ -112,17 +112,12 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
             return;
           }
           schemaMap.set(schema.name, schema);
-          if (client) {
-            await client.setWarehouse(schema.warehouseName);
-            await client.setDatabase(schema.databaseName);
-            await client.setSchema(schema.name);
-            for await (const rawTable of client.fetchTables()) {
-              const snowflakeTable = convertTable(
-                rawTable,
-                schema.warehouseName,
-              );
-              tables.push(snowflakeTable);
-            }
+          await client!.setWarehouse(schema.warehouseName);
+          await client!.setDatabase(schema.databaseName);
+          await client!.setSchema(schema.name);
+          for await (const rawTable of client!.fetchTables()) {
+            const snowflakeTable = convertTable(rawTable, schema.warehouseName);
+            tables.push(snowflakeTable);
           }
         },
       );
