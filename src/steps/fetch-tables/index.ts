@@ -4,13 +4,16 @@ import {
   createIntegrationEntity,
   getTime,
   createIntegrationRelationship,
-  Entity
 } from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeTable, SnowflakeSchema, SnowflakeIntegrationConfig } from '../../types';
+import {
+  SnowflakeTable,
+  SnowflakeSchema,
+  SnowflakeIntegrationConfig,
+} from '../../types';
 
 type RawTable = RawSnowflake['Table'];
 interface SnowflakeTableEntityData extends IntegrationEntityData {
@@ -87,11 +90,7 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   name: 'Fetch Tables',
   types: ['snowflake_table'],
   dependsOn: ['fetch-schemas'],
-  async executionHandler({
-    logger,
-    jobState,
-    instance,
-  }) {
+  async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const schemaMap = new Map<string, SnowflakeSchema | undefined>();
@@ -101,8 +100,7 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
       logger.info('Fetching tables...');
       await jobState.iterateEntities(
         { _type: 'snowflake_schema' },
-        async (schema: Entity) => {
-          const snowflakeEntity = schema as SnowflakeSchema;
+        async (schema: SnowflakeSchema) => {
           // per: https://docs.snowflake.com/en/sql-reference/info-schema.html
           // the `INFORMATION_SCHEMA` is a system defined schema which provides
           // nice views for metadata that probably should have been
@@ -113,13 +111,16 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
           if (schema.name === 'INFORMATION_SCHEMA') {
             return;
           }
-          schemaMap.set(snowflakeEntity.name, snowflakeEntity);
-          if(client) {
-            await client.setWarehouse(snowflakeEntity.warehouseName);
-            await client.setDatabase(snowflakeEntity.databaseName);
-            await client.setSchema(snowflakeEntity.name);
+          schemaMap.set(schema.name, schema);
+          if (client) {
+            await client.setWarehouse(schema.warehouseName);
+            await client.setDatabase(schema.databaseName);
+            await client.setSchema(schema.name);
             for await (const rawTable of client.fetchTables()) {
-              const snowflakeTable = convertTable(rawTable, snowflakeEntity.warehouseName);
+              const snowflakeTable = convertTable(
+                rawTable,
+                schema.warehouseName,
+              );
               tables.push(snowflakeTable);
             }
           }
