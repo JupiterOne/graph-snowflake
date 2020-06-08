@@ -3,12 +3,20 @@
 import {
   createMockStepExecutionContext,
   Recording,
-} from '@jupiterone/integration-sdk/testing';
+} from '@jupiterone/integration-sdk-testing';
 import { setupDefaultRecording } from '../../../../test';
 import schemaEntities from './__fixtures__/schemaEntities.json';
-import informationSchemaEntites from './__fixtures__/informationSchemaEntities.json';
+import informationSchemaEntities from './__fixtures__/informationSchemaEntities.json';
 
 import step from '../';
+import { SnowflakeIntegrationConfig } from '../../../types';
+
+const instanceConfig: SnowflakeIntegrationConfig = {
+  account: 'snowflake-account',
+  password: 'snowflake-password',
+  role: 'snowflake-role',
+  username: 'snowflake-username'
+}
 
 let recording: Recording;
 beforeEach(() => {
@@ -23,7 +31,7 @@ afterEach(async () => {
 });
 
 test('step collects and processes data', async () => {
-  const context = createMockStepExecutionContext({ entities: schemaEntities });
+  const context = createMockStepExecutionContext({ entities: schemaEntities, instanceConfig });
   await step.executionHandler(context);
 
   const testTable = context.jobState.collectedEntities.find(
@@ -90,8 +98,9 @@ test('step collects and processes data', async () => {
 });
 
 test('skips information schema for collecting tables', async () => {
-  const context = createMockStepExecutionContext({
-    entities: informationSchemaEntites,
+  const context = createMockStepExecutionContext<SnowflakeIntegrationConfig>({
+    instanceConfig,
+    entities: informationSchemaEntities,
   });
   await step.executionHandler(context);
   expect(context.jobState.collectedEntities).toEqual([]);

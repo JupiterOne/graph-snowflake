@@ -1,11 +1,10 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
-} from '@jupiterone/integration-sdk';
-import { SnowflakeUser } from '../../types';
+} from '@jupiterone/integration-sdk-core';
+import { SnowflakeUser, SnowflakeIntegrationConfig } from '../../types';
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
@@ -63,18 +62,18 @@ function convertUser(rawUser: RawUser): SnowflakeUserEntityData {
       username: name,
       email,
       hasRsaPublicKey: hasRsaPublicKeyStr === 'true',
-      createdOn: getTime(createdOnStr),
+      createdOn: getTime(createdOnStr) as number,
       disabled: disabled === 'true',
       hasPassword: hasPasswordStr === 'true',
       mustChangePassword: mustChangePasswordStr === 'true',
-      lastLogin: getTime(lastSuccessLoginStr),
+      lastLogin: getTime(lastSuccessLoginStr) as number,
       comment,
       owner,
       snowflakeLock: snowflakeLockStr === 'true',
-      minsToUnlock: getTime(minsToUnlockStr),
+      minsToUnlock: getTime(minsToUnlockStr) as number,
       lockedUntilTime:
         lockUntilTimeStr !== 'NULL' ? getTime(lockUntilTimeStr) : null,
-      expiresAtTime: getTime(expiresAtTimeStr),
+      expiresAtTime: getTime(expiresAtTimeStr) as number,
       defaultWarehouse,
       defaultNamespace,
       defaultRole,
@@ -86,7 +85,7 @@ function convertUser(rawUser: RawUser): SnowflakeUserEntityData {
   };
 }
 
-const step: IntegrationStep = {
+const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-users',
   name: 'Fetch Users',
   types: ['snowflake_user'],
@@ -94,7 +93,7 @@ const step: IntegrationStep = {
     logger,
     jobState,
     instance,
-  }: IntegrationStepExecutionContext) {
+  }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const users: SnowflakeUserEntityData[] = [];

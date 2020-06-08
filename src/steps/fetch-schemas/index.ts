@@ -1,16 +1,19 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeSchema, SnowflakeDatabase } from '../../types';
+import {
+  SnowflakeSchema,
+  SnowflakeDatabase,
+  SnowflakeIntegrationConfig,
+} from '../../types';
 
 type RawSchema = RawSnowflake['Schema'];
 interface SnowflakeSchemaEntityData extends IntegrationEntityData {
@@ -46,16 +49,12 @@ function convertSchema(
   };
 }
 
-const step: IntegrationStep = {
+const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-schemas',
   name: 'Fetch Schemas',
   types: ['snowflake_schema'],
   dependsOn: ['fetch-databases'],
-  async executionHandler({
-    logger,
-    jobState,
-    instance,
-  }: IntegrationStepExecutionContext) {
+  async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const databaseMap = new Map<string, SnowflakeDatabase | undefined>();
@@ -67,9 +66,10 @@ const step: IntegrationStep = {
         { _type: 'snowflake_database' },
         async (database: SnowflakeDatabase) => {
           databaseMap.set(database.name, database);
-          await client.setWarehouse(database.warehouseName);
-          await client.setDatabase(database.name);
-          for await (const rawSchema of client.fetchSchemas()) {
+
+          await client!.setWarehouse(database.warehouseName);
+          await client!.setDatabase(database.name);
+          for await (const rawSchema of client!.fetchSchemas()) {
             const schemaData = convertSchema(rawSchema, database.warehouseName);
             schemas.push(schemaData);
           }

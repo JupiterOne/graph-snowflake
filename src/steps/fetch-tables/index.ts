@@ -1,16 +1,19 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeTable, SnowflakeSchema } from '../../types';
+import {
+  SnowflakeTable,
+  SnowflakeSchema,
+  SnowflakeIntegrationConfig,
+} from '../../types';
 
 type RawTable = RawSnowflake['Table'];
 interface SnowflakeTableEntityData extends IntegrationEntityData {
@@ -53,7 +56,7 @@ function convertTable(
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_table',
       _key: buildKey(rawTable, warehouseName),
-      createdOn: getTime(createdOnStr),
+      createdOn: getTime(createdOnStr) as number,
       itemCount: rows,
       displayName: name,
       tableName: name,
@@ -82,16 +85,12 @@ function convertTable(
   };
 }
 
-const step: IntegrationStep = {
+const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-tables',
   name: 'Fetch Tables',
   types: ['snowflake_table'],
   dependsOn: ['fetch-schemas'],
-  async executionHandler({
-    logger,
-    jobState,
-    instance,
-  }: IntegrationStepExecutionContext) {
+  async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const schemaMap = new Map<string, SnowflakeSchema | undefined>();
@@ -113,10 +112,10 @@ const step: IntegrationStep = {
             return;
           }
           schemaMap.set(schema.name, schema);
-          await client.setWarehouse(schema.warehouseName);
-          await client.setDatabase(schema.databaseName);
-          await client.setSchema(schema.name);
-          for await (const rawTable of client.fetchTables()) {
+          await client!.setWarehouse(schema.warehouseName);
+          await client!.setDatabase(schema.databaseName);
+          await client!.setSchema(schema.name);
+          for await (const rawTable of client!.fetchTables()) {
             const snowflakeTable = convertTable(rawTable, schema.warehouseName);
             tables.push(snowflakeTable);
           }

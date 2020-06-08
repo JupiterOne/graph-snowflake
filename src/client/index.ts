@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import snowflake from 'snowflake-sdk';
-import { IntegrationLogger } from '@jupiterone/integration-sdk';
+import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
 import sqlCommands from './sqlCommands';
 import { RawSnowflake } from './types';
 import validator from './validator';

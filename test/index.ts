@@ -1,5 +1,6 @@
 import zlib from 'zlib';
-import { Recording, setupRecording } from '@jupiterone/integration-sdk/testing';
+import { Recording, setupRecording } from '@jupiterone/integration-sdk-testing';
+import { MODE } from 'pollyjs__core';
 import assert from 'assert';
 
 async function* simpleAsyncIterator<T = any>(array: T[]): AsyncIterable<T> {
@@ -9,7 +10,7 @@ async function* simpleAsyncIterator<T = any>(array: T[]): AsyncIterable<T> {
 }
 
 async function iterableToArray<T = any>(it: AsyncIterable<T>): Promise<T[]> {
-  const results = [];
+  const results: T[] = [];
   for await (const row of it) {
     results.push(row);
   }
@@ -88,7 +89,7 @@ function setupDefaultRecording({
     },
   });
 
-  const mode = process.env.MODE || 'replay';
+  const mode = (process.env.MODE || 'replay') as MODE;
   const validModes = ['replay', 'record', 'passthrough'];
   assert.ok(
     validModes.includes(mode),

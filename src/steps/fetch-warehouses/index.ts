@@ -1,15 +1,14 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeWarehouse } from '../../types';
+import { SnowflakeWarehouse, SnowflakeIntegrationConfig } from '../../types';
 
 type RawWarehouse = RawSnowflake['Warehouse'];
 interface SnowflakeWarehouseEntityData extends IntegrationEntityData {
@@ -42,7 +41,7 @@ function convertWarehouse(
   };
 }
 
-const step: IntegrationStep = {
+const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-warehouses',
   name: 'Fetch Warehouses',
   types: ['snowflake_warehouse'],
@@ -50,7 +49,7 @@ const step: IntegrationStep = {
     logger,
     jobState,
     instance,
-  }: IntegrationStepExecutionContext) {
+  }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const warehouses: SnowflakeWarehouseEntityData[] = [];

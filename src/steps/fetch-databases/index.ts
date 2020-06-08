@@ -1,16 +1,19 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
 import { RawSnowflake } from '../../client/types';
-import { SnowflakeDatabase, SnowflakeWarehouse } from '../../types';
+import {
+  SnowflakeDatabase,
+  SnowflakeWarehouse,
+  SnowflakeIntegrationConfig,
+} from '../../types';
 
 type RawDatabase = RawSnowflake['Database'];
 interface SnowflakeDatabaseEntityData extends IntegrationEntityData {
@@ -43,7 +46,7 @@ function convertDatabase(
       _key: buildKey(rawDatabase, currentWarehouse),
       displayName: name,
       name,
-      createdOn: getTime(createdOnStr),
+      createdOn: getTime(createdOnStr) as number,
       comment,
       owner,
       origin,
@@ -63,16 +66,12 @@ function convertDatabase(
   };
 }
 
-const step: IntegrationStep = {
+const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-databases',
   name: 'Fetch Databases',
   types: ['snowflake_database'],
   dependsOn: ['fetch-warehouses'],
-  async executionHandler({
-    logger,
-    jobState,
-    instance,
-  }: IntegrationStepExecutionContext) {
+  async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const warehouseMap = new Map<string, SnowflakeWarehouse | undefined>();
@@ -85,8 +84,9 @@ const step: IntegrationStep = {
         { _type: 'snowflake_warehouse' },
         async (warehouse: SnowflakeWarehouse) => {
           warehouseMap.set(warehouse.name, warehouse);
-          await client.setWarehouse(warehouse.name);
-          for await (const rawDatabase of client.fetchDatabases()) {
+
+          await client!.setWarehouse(warehouse.name);
+          for await (const rawDatabase of client!.fetchDatabases()) {
             const snowflakeDatabase = convertDatabase(
               rawDatabase,
               warehouse.name,
