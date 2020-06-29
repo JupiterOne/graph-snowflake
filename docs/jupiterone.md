@@ -6,6 +6,12 @@ JupiterOne provides a managed integration for Snowflake. The integration
 connects to Snowflake and accesses resources by running commands, analyzes the
 data and creates relationships between them
 
+## Authentication and Access Control
+
+The integration ingests resources from tables in the Snowflake system using `SHOW`
+commands. The credentials provided to JupiterOne must be configured with the
+[read permissions required to perform these commands](https://docs.snowflake.com/en/user-guide/security-access-control-privileges.html#schema-privileges).
+
 ## Data Model
 
 ### Entities
