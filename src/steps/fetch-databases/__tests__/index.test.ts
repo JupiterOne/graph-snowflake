@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-
 import {
   createMockStepExecutionContext,
   Recording,
@@ -14,7 +12,7 @@ const instanceConfig: SnowflakeIntegrationConfig = {
   account: 'snowflake-account',
   password: 'snowflake-password',
   role: 'snowflake-role',
-  username: 'snowflake-username'
+  username: 'snowflake-username',
 };
 
 let recording: Recording;
@@ -32,7 +30,7 @@ afterEach(async () => {
 test('step collects and processes data', async () => {
   const context = createMockStepExecutionContext({
     entities: warehouseEntities,
-    instanceConfig
+    instanceConfig,
   });
   await step.executionHandler(context);
 

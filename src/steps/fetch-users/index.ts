@@ -88,12 +88,15 @@ function convertUser(rawUser: RawUser): SnowflakeUserEntityData {
 const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-users',
   name: 'Fetch Users',
-  types: ['snowflake_user'],
-  async executionHandler({
-    logger,
-    jobState,
-    instance,
-  }) {
+  entities: [
+    {
+      resourceName: 'User',
+      _type: 'snowflake_user',
+      _class: 'User',
+    },
+  ],
+  relationships: [],
+  async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const users: SnowflakeUserEntityData[] = [];

@@ -3,7 +3,8 @@ import {
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
-  createIntegrationRelationship,
+  createDirectRelationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
@@ -88,7 +89,21 @@ function convertTable(
 const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-tables',
   name: 'Fetch Tables',
-  types: ['snowflake_table'],
+  entities: [
+    {
+      resourceName: 'Table',
+      _type: 'snowflake_table',
+      _class: ['Datastore', 'Database'],
+    },
+  ],
+  relationships: [
+    {
+      _type: 'snowflake_schema_has_table',
+      sourceType: 'snowflake_schema',
+      _class: RelationshipClass.HAS,
+      targetType: 'snowflake_table',
+    },
+  ],
   dependsOn: ['fetch-schemas'],
   async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
@@ -143,8 +158,8 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
       const schema = schemaMap.get(tableEntity.schemaName);
       if (schema) {
         await jobState.addRelationships([
-          createIntegrationRelationship({
-            _class: 'HAS',
+          createDirectRelationship({
+            _class: RelationshipClass.HAS,
             from: schema,
             to: tableEntity,
           }),

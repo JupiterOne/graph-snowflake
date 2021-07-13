@@ -44,12 +44,15 @@ function convertWarehouse(
 const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-warehouses',
   name: 'Fetch Warehouses',
-  types: ['snowflake_warehouse'],
-  async executionHandler({
-    logger,
-    jobState,
-    instance,
-  }) {
+  entities: [
+    {
+      resourceName: 'Warehouse',
+      _type: 'snowflake_warehouse',
+      _class: ['Datastore', 'Database'],
+    },
+  ],
+  relationships: [],
+  async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
     let client: SnowflakeClient | undefined;
     const warehouses: SnowflakeWarehouseEntityData[] = [];
