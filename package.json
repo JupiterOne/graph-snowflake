@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-snowflake",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A graph conversion tool for https://www.snowflake.com/.",
   "license": "MPL-2.0",
   "main": "dist/index.js",
