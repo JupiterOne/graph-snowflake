@@ -1,6 +1,5 @@
 import { IntegrationInvocationConfig } from '@jupiterone/integration-sdk-core';
 
-import instanceConfigFields from './instanceConfigFields';
 import validateInvocation from './validateInvocation';
 
 import fetchDatabases from './steps/fetch-databases';
@@ -11,7 +10,21 @@ import fetchWarehouses from './steps/fetch-warehouses';
 import { SnowflakeIntegrationConfig } from './types';
 
 export const invocationConfig: IntegrationInvocationConfig<SnowflakeIntegrationConfig> = {
-  instanceConfigFields,
+  instanceConfigFields: {
+    username: {
+      type: 'string',
+    },
+    account: {
+      type: 'string',
+    },
+    password: {
+      type: 'string',
+      mask: true,
+    },
+    role: {
+      type: 'string',
+    },
+  },
   validateInvocation,
   integrationSteps: [
     fetchDatabases,

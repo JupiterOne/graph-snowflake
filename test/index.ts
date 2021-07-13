@@ -3,6 +3,7 @@ import { Recording, setupRecording } from '@jupiterone/integration-sdk-testing';
 import { MODE } from 'pollyjs__core';
 import assert from 'assert';
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function* simpleAsyncIterator<T = any>(array: T[]): AsyncIterable<T> {
   for (const row of array) {
     yield row;

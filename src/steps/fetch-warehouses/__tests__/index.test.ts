@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-
 import {
   createMockStepExecutionContext,
   Recording,
@@ -25,8 +23,8 @@ const instanceConfig: SnowflakeIntegrationConfig = {
   account: 'snowflake-account',
   password: 'snowflake-password',
   role: 'snowflake-role',
-  username: 'snowflake-username'
-}
+  username: 'snowflake-username',
+};
 
 test('step collects and processes data', async () => {
   const context = createMockStepExecutionContext({ instanceConfig });

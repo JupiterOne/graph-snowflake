@@ -3,7 +3,8 @@ import {
   IntegrationEntityData,
   createIntegrationEntity,
   getTime,
-  createIntegrationRelationship,
+  createDirectRelationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
@@ -69,7 +70,21 @@ function convertDatabase(
 const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-databases',
   name: 'Fetch Databases',
-  types: ['snowflake_database'],
+  entities: [
+    {
+      resourceName: 'Database',
+      _type: 'snowflake_database',
+      _class: ['Datastore', 'Database'],
+    },
+  ],
+  relationships: [
+    {
+      _type: 'snowflake_database_has_warehouse',
+      sourceType: 'snowflake_warehouse',
+      _class: RelationshipClass.HAS,
+      targetType: 'snowflake_database',
+    },
+  ],
   dependsOn: ['fetch-warehouses'],
   async executionHandler({ logger, jobState, instance }) {
     const { config } = instance;
@@ -122,8 +137,8 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
       const warehouse = warehouseMap.get(warehouseName);
       if (warehouse) {
         await jobState.addRelationships([
-          createIntegrationRelationship({
-            _class: 'HAS',
+          createDirectRelationship({
+            _class: RelationshipClass.HAS,
             from: warehouse,
             to: databaseEntity,
           }),
