@@ -1,4 +1,4 @@
-# Snowflake 
+# Snowflake
 
 ## Snowflake + JupiterOne Integration Benefits
 
