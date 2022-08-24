@@ -1,977 +1,1021 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "BoolStr": {
-      "enum": ["false", "true"],
-      "type": "string"
-    },
-    "ONorOFF": {
-      "enum": ["OFF", "ON"],
-      "type": "string"
-    },
-    "RawSnowflake": {
-      "properties": {
-        "AccountPrivilegeGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "grant_option": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_on": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "privilege": {
-              "type": "string"
-            }
-          },
-          "type": "object"
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "BoolStr": {
+            "enum": [
+                "false",
+                "true"
+            ],
+            "type": "string"
         },
-        "Database": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "is_current": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_default": {
-              "$ref": "#/definitions/YorN"
-            },
-            "name": {
-              "type": "string"
-            },
-            "options": {
-              "type": "string"
-            },
-            "origin": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "retention_time": {
-              "type": "string"
-            }
-          },
-          "type": "object"
+        "ONorOFF": {
+            "enum": [
+                "OFF",
+                "ON"
+            ],
+            "type": "string"
         },
-        "FileFormat": {
-          "properties": {
-            "comment": {
-              "type": "string"
+        "RawSnowflake": {
+            "properties": {
+                "AccountPrivilegeGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Database": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "is_current": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_default": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "options": {
+                            "type": "string"
+                        },
+                        "origin": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "retention_time": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "FileFormat": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "enum": [
+                                "AVRO",
+                                "CSV",
+                                "JSON",
+                                "ORC",
+                                "PARQUET",
+                                "XML"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Function": {
+                    "properties": {
+                        "arguments": {
+                            "type": "string"
+                        },
+                        "catalog_name": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "is_aggregate": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_ansi": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_builtin": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_secure": {
+                            "enum": [
+                                "N",
+                                "Y"
+                            ],
+                            "type": "string"
+                        },
+                        "is_table_function": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "max_num_arguments": {
+                            "type": "number"
+                        },
+                        "min_num_arguments": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        },
+                        "valid_for_clustering": {
+                            "$ref": "#/definitions/YorN"
+                        }
+                    },
+                    "type": "object"
+                },
+                "FutureDatabaseGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "grant_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "FutureSchemaGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "grant_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "GlobalGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Integration": {
+                    "properties": {
+                        "category": {
+                            "enum": [
+                                "NOTIFICATION",
+                                "SECURITY",
+                                "STORAGE"
+                            ],
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ManagedAccount": {
+                    "properties": {
+                        "cloud": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "is_reader": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "locator": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "region": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "OfRoleGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "OfShareGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "share": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "OnObjectGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Pipe": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "definition": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "notification_channel": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Procedure": {
+                    "properties": {
+                        "arguments": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "is_aggregate": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_ansi": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_builtin": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "max_num_arguments": {
+                            "type": "number"
+                        },
+                        "min_num_arguments": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Region": {
+                    "properties": {
+                        "cloud": {
+                            "type": "string"
+                        },
+                        "region": {
+                            "type": "string"
+                        },
+                        "region_group": {
+                            "type": "string"
+                        },
+                        "snowflake_region": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Role": {
+                    "properties": {
+                        "assigned_to_users": {
+                            "type": "number"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_roles": {
+                            "type": "number"
+                        },
+                        "granted_to_roles": {
+                            "type": "number"
+                        },
+                        "is_current": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_default": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_inherited": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Schema": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "is_current": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_default": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "options": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "retention_time": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Share": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "kind": {
+                            "enum": [
+                                "INBOUND",
+                                "OUTBOUND"
+                            ],
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "to": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Stage": {
+                    "properties": {
+                        "cloud": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "has_credentials": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "has_encryption_key": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "region": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        },
+                        "storage_integration": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Stream": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "mode": {
+                            "enum": [
+                                "DEFAULT",
+                                "INSERT_ONLY"
+                            ],
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        },
+                        "stale": {
+                            "type": "string"
+                        },
+                        "table_name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "enum": [
+                                "DELTA"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Table": {
+                    "properties": {
+                        "automatic_clustering": {
+                            "$ref": "#/definitions/ONorOFF"
+                        },
+                        "bytes": {
+                            "type": "number"
+                        },
+                        "change_tracking": {
+                            "$ref": "#/definitions/ONorOFF"
+                        },
+                        "cluster_by": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "dropped_on": {
+                            "type": "string"
+                        },
+                        "kind": {
+                            "enum": [
+                                "TABLE",
+                                "TEMPORARY",
+                                "TRANSIENT"
+                            ],
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "retention_time": {
+                            "type": "string"
+                        },
+                        "rows": {
+                            "type": "number"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Task": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "condition": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "definition": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "predecessors": {
+                            "type": "string"
+                        },
+                        "schedule": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        },
+                        "state": {
+                            "enum": [
+                                "started",
+                                "suspended"
+                            ],
+                            "type": "string"
+                        },
+                        "warehouse": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ToRolePrivilegeGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ToShareGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "grant_option": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "granted_on": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "privilege": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ToUserPrivilegeGrant": {
+                    "properties": {
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "granted_by": {
+                            "type": "string"
+                        },
+                        "granted_to": {
+                            "type": "string"
+                        },
+                        "grantee_name": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "User": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "days_to_expiry": {
+                            "type": "string"
+                        },
+                        "default_namespace": {
+                            "type": "string"
+                        },
+                        "default_role": {
+                            "type": "string"
+                        },
+                        "default_warehouse": {
+                            "type": "string"
+                        },
+                        "disabled": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "display_name": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "expires_at_time": {
+                            "type": "string"
+                        },
+                        "ext_authn_duo": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "ext_authn_uid": {
+                            "type": "string"
+                        },
+                        "first_name": {
+                            "type": "string"
+                        },
+                        "has_password": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "has_rsa_public_key": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "last_name": {
+                            "type": "string"
+                        },
+                        "last_success_login": {
+                            "type": "string"
+                        },
+                        "locked_until_time": {
+                            "type": "string"
+                        },
+                        "login_name": {
+                            "type": "string"
+                        },
+                        "mins_to_bypass_mfa": {
+                            "type": "string"
+                        },
+                        "mins_to_unlock": {
+                            "type": "string"
+                        },
+                        "must_change_password": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "snowflake_lock": {
+                            "$ref": "#/definitions/BoolStr"
+                        }
+                    },
+                    "type": "object"
+                },
+                "View": {
+                    "properties": {
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "database_name": {
+                            "type": "string"
+                        },
+                        "is_materialized": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "is_secure": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "reserved": {
+                            "type": "string"
+                        },
+                        "schema_name": {
+                            "type": "string"
+                        },
+                        "text": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "Warehouse": {
+                    "properties": {
+                        "auto_resume": {
+                            "$ref": "#/definitions/BoolStr"
+                        },
+                        "auto_suspend": {
+                            "type": "number"
+                        },
+                        "available": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        },
+                        "created_on": {
+                            "type": "string"
+                        },
+                        "is_current": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "is_default": {
+                            "$ref": "#/definitions/YorN"
+                        },
+                        "max_cluster_count": {
+                            "type": "number"
+                        },
+                        "min_cluster_count": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "other": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "provisioning": {
+                            "type": "string"
+                        },
+                        "queued": {
+                            "type": "number"
+                        },
+                        "quiescing": {
+                            "type": "string"
+                        },
+                        "resource_monitor": {
+                            "type": "string"
+                        },
+                        "resumed_on": {
+                            "type": "string"
+                        },
+                        "running": {
+                            "type": "number"
+                        },
+                        "scaling_policy": {
+                            "type": "string"
+                        },
+                        "size": {
+                            "enum": [
+                                "2X-Large",
+                                "3X-Large",
+                                "4X-Large",
+                                "Large",
+                                "Medium",
+                                "Small",
+                                "X-Large",
+                                "X-Small"
+                            ],
+                            "type": "string"
+                        },
+                        "started_clusters": {
+                            "type": "number"
+                        },
+                        "state": {
+                            "enum": [
+                                "STARTED",
+                                "SUSPENDED"
+                            ],
+                            "type": "string"
+                        },
+                        "type": {
+                            "enum": [
+                                "STANDARD"
+                            ],
+                            "type": "string"
+                        },
+                        "updated_on": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
             },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            },
-            "type": {
-              "enum": ["AVRO", "CSV", "JSON", "ORC", "PARQUET", "XML"],
-              "type": "string"
-            }
-          },
-          "type": "object"
+            "type": "object"
         },
-        "Function": {
-          "properties": {
-            "arguments": {
-              "type": "string"
-            },
-            "catalog_name": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "is_aggregate": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_ansi": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_builtin": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_secure": {
-              "enum": ["N", "Y"],
-              "type": "string"
-            },
-            "is_table_function": {
-              "$ref": "#/definitions/YorN"
-            },
-            "max_num_arguments": {
-              "type": "number"
-            },
-            "min_num_arguments": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            },
-            "valid_for_clustering": {
-              "$ref": "#/definitions/YorN"
-            }
-          },
-          "type": "object"
-        },
-        "FutureDatabaseGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "grant_on": {
-              "type": "string"
-            },
-            "grant_option": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "grant_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "privilege": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "FutureSchemaGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "grant_on": {
-              "type": "string"
-            },
-            "grant_option": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "grant_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "privilege": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "GlobalGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "role": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Integration": {
-          "properties": {
-            "category": {
-              "enum": ["NOTIFICATION", "SECURITY", "STORAGE"],
-              "type": "string"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "enabled": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "name": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "ManagedAccount": {
-          "properties": {
-            "cloud": {
-              "type": "string"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "is_reader": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "locator": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "region": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "OfRoleGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "role": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "OfShareGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "share": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "OnObjectGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "grant_option": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_on": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "privilege": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Pipe": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "definition": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "notification_channel": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Procedure": {
-          "properties": {
-            "arguments": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "is_aggregate": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_ansi": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_builtin": {
-              "$ref": "#/definitions/YorN"
-            },
-            "max_num_arguments": {
-              "type": "number"
-            },
-            "min_num_arguments": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Region": {
-          "properties": {
-            "cloud": {
-              "type": "string"
-            },
-            "region": {
-              "type": "string"
-            },
-            "region_group": {
-              "type": "string"
-            },
-            "snowflake_region": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Role": {
-          "properties": {
-            "assigned_to_users": {
-              "type": "number"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "granted_roles": {
-              "type": "number"
-            },
-            "granted_to_roles": {
-              "type": "number"
-            },
-            "is_current": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_default": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_inherited": {
-              "$ref": "#/definitions/YorN"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Schema": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "is_current": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_default": {
-              "$ref": "#/definitions/YorN"
-            },
-            "name": {
-              "type": "string"
-            },
-            "options": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "retention_time": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Share": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "kind": {
-              "enum": ["INBOUND", "OUTBOUND"],
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "to": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Stage": {
-          "properties": {
-            "cloud": {
-              "type": "string"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "has_credentials": {
-              "$ref": "#/definitions/YorN"
-            },
-            "has_encryption_key": {
-              "$ref": "#/definitions/YorN"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "region": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            },
-            "storage_integration": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Stream": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "mode": {
-              "enum": ["DEFAULT", "INSERT_ONLY"],
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            },
-            "stale": {
-              "type": "string"
-            },
-            "table_name": {
-              "type": "string"
-            },
-            "type": {
-              "enum": ["DELTA"],
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Table": {
-          "properties": {
-            "automatic_clustering": {
-              "$ref": "#/definitions/ONorOFF"
-            },
-            "bytes": {
-              "type": "number"
-            },
-            "change_tracking": {
-              "$ref": "#/definitions/ONorOFF"
-            },
-            "cluster_by": {
-              "type": "string"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "dropped_on": {
-              "type": "string"
-            },
-            "kind": {
-              "enum": ["TABLE", "TEMPORARY", "TRANSIENT"],
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "retention_time": {
-              "type": "string"
-            },
-            "rows": {
-              "type": "number"
-            },
-            "schema_name": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Task": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "condition": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "definition": {
-              "type": "string"
-            },
-            "id": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "predecessors": {
-              "type": "string"
-            },
-            "schedule": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            },
-            "state": {
-              "enum": ["started", "suspended"],
-              "type": "string"
-            },
-            "warehouse": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "ToRolePrivilegeGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "grant_option": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_on": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "privilege": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "ToShareGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "grant_option": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "granted_on": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "privilege": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "ToUserPrivilegeGrant": {
-          "properties": {
-            "created_on": {
-              "type": "string"
-            },
-            "granted_by": {
-              "type": "string"
-            },
-            "granted_to": {
-              "type": "string"
-            },
-            "grantee_name": {
-              "type": "string"
-            },
-            "role": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "User": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "days_to_expiry": {
-              "type": "string"
-            },
-            "default_namespace": {
-              "type": "string"
-            },
-            "default_role": {
-              "type": "string"
-            },
-            "default_warehouse": {
-              "type": "string"
-            },
-            "disabled": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "display_name": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            },
-            "expires_at_time": {
-              "type": "string"
-            },
-            "ext_authn_duo": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "ext_authn_uid": {
-              "type": "string"
-            },
-            "first_name": {
-              "type": "string"
-            },
-            "has_password": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "has_rsa_public_key": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "last_name": {
-              "type": "string"
-            },
-            "last_success_login": {
-              "type": "string"
-            },
-            "locked_until_time": {
-              "type": "string"
-            },
-            "login_name": {
-              "type": "string"
-            },
-            "mins_to_bypass_mfa": {
-              "type": "string"
-            },
-            "mins_to_unlock": {
-              "type": "string"
-            },
-            "must_change_password": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "snowflake_lock": {
-              "$ref": "#/definitions/BoolStr"
-            }
-          },
-          "type": "object"
-        },
-        "View": {
-          "properties": {
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "database_name": {
-              "type": "string"
-            },
-            "is_materialized": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "is_secure": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "name": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "reserved": {
-              "type": "string"
-            },
-            "schema_name": {
-              "type": "string"
-            },
-            "text": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "Warehouse": {
-          "properties": {
-            "auto_resume": {
-              "$ref": "#/definitions/BoolStr"
-            },
-            "auto_suspend": {
-              "type": "number"
-            },
-            "available": {
-              "type": "string"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "created_on": {
-              "type": "string"
-            },
-            "is_current": {
-              "$ref": "#/definitions/YorN"
-            },
-            "is_default": {
-              "$ref": "#/definitions/YorN"
-            },
-            "max_cluster_count": {
-              "type": "number"
-            },
-            "min_cluster_count": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            },
-            "other": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "provisioning": {
-              "type": "string"
-            },
-            "queued": {
-              "type": "number"
-            },
-            "quiescing": {
-              "type": "string"
-            },
-            "resource_monitor": {
-              "type": "string"
-            },
-            "resumed_on": {
-              "type": "string"
-            },
-            "running": {
-              "type": "number"
-            },
-            "scaling_policy": {
-              "type": "string"
-            },
-            "size": {
-              "enum": [
-                "2X-Large",
-                "3X-Large",
-                "4X-Large",
-                "Large",
-                "Medium",
-                "Small",
-                "X-Large",
-                "X-Small"
-              ],
-              "type": "string"
-            },
-            "started_clusters": {
-              "type": "number"
-            },
-            "state": {
-              "enum": ["STARTED", "SUSPENDED"],
-              "type": "string"
-            },
-            "type": {
-              "enum": ["STANDARD"],
-              "type": "string"
-            },
-            "updated_on": {
-              "type": "string"
-            }
-          },
-          "type": "object"
+        "YorN": {
+            "enum": [
+                "N",
+                "Y"
+            ],
+            "type": "string"
         }
-      },
-      "type": "object"
-    },
-    "YorN": {
-      "enum": ["N", "Y"],
-      "type": "string"
     }
-  }
 }
+
