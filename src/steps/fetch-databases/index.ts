@@ -2,7 +2,7 @@ import {
   IntegrationStep,
   IntegrationEntityData,
   createIntegrationEntity,
-  getTime,
+  parseTimePropertyValue,
   createDirectRelationship,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
@@ -47,7 +47,7 @@ function convertDatabase(
       _key: buildKey(rawDatabase, currentWarehouse),
       displayName: name,
       name,
-      createdOn: getTime(createdOnStr) as number,
+      createdOn: parseTimePropertyValue(createdOnStr) as number,
       comment,
       owner,
       origin,
@@ -74,12 +74,12 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
     {
       resourceName: 'Database',
       _type: 'snowflake_database',
-      _class: ['Datastore', 'Database'],
+      _class: ['DataStore', 'Database'],
     },
   ],
   relationships: [
     {
-      _type: 'snowflake_database_has_warehouse',
+      _type: 'snowflake_warehouse_has_database',
       sourceType: 'snowflake_warehouse',
       _class: RelationshipClass.HAS,
       targetType: 'snowflake_database',

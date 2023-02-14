@@ -2,7 +2,7 @@ import {
   IntegrationStep,
   IntegrationEntityData,
   createIntegrationEntity,
-  getTime,
+  parseTimePropertyValue,
   createDirectRelationship,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
@@ -57,7 +57,7 @@ function convertTable(
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_table',
       _key: buildKey(rawTable, warehouseName),
-      createdOn: getTime(createdOnStr) as number,
+      createdOn: parseTimePropertyValue(createdOnStr) as number,
       itemCount: rows,
       displayName: name,
       tableName: name,
@@ -65,7 +65,7 @@ function convertTable(
       clusterBy,
       kind,
       changeTracking: changeTrackingStr === 'ON',
-      droppedOn: droppedOnStr ? getTime(droppedOnStr) : null,
+      droppedOn: droppedOnStr ? parseTimePropertyValue(droppedOnStr) : null,
       owner,
       // TODO: there aren't really tags like we have in
       // AWS, can we use some kind of structured value
@@ -93,7 +93,7 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
     {
       resourceName: 'Table',
       _type: 'snowflake_table',
-      _class: ['Datastore', 'Database'],
+      _class: ['DataStore', 'Database'],
     },
   ],
   relationships: [

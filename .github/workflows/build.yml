@@ -1,70 +1,53 @@
 name: Build
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [12.x]
-        os: [ubuntu-latest]
-
+    runs-on: ubuntu-latest
     steps:
+      - name: Check out code repository source code
+        uses: actions/checkout@v3
+
       - id: setup-node
         name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Check out code repository source code
-        uses: actions/checkout@v2
+          node-version: 14.x
+          cache: yarn
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
+
+      - name: Run tests
+        run: yarn test:ci
 
       - name: Run build
         run: yarn build
 
   # Publishing is done in a separate job to allow
   # for all matrix builds to complete.
-  release:
+  BuildRelease:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [12]
-
+    if: github.ref == 'refs/heads/main'
+    name: Checkout Code
     steps:
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 12.x
-
+          node-version: 14.x
+          cache: yarn
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
-
-      # Fetch tags and describe the commit before the merge commit
-      # to see if it's a version publish
-      - name: Fetch tags
-        run: |
-          git fetch --tags
-          if git describe --exact-match --match "v*.*.*" HEAD^2
-          then
-            echo "Found version commit tag. Publishing."
-            echo "publish=true" >> $GITHUB_ENV
-          else
-            echo "Version commit tag not found. Not publishing."
-          fi
-      - name: Publish
-        if: env.publish == 'true'
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-          yarn
-          npm publish
+          token: ${{ secrets.AUTO_GITHUB_PAT_TOKEN }}
+      - name: Build and Release
+        uses: jupiterone/action-npm-build-release@v1
+        with:
+          npm_auth_token: ${{ secrets.NPM_AUTH_TOKEN }}
+          gh_token: ${{ secrets.AUTO_GITHUB_PAT_TOKEN }}
