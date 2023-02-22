@@ -2,7 +2,7 @@ import {
   IntegrationStep,
   IntegrationEntityData,
   createIntegrationEntity,
-  getTime,
+  parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
@@ -31,7 +31,7 @@ function convertWarehouse(
       _class: ['DataStore', 'Database'],
       _type: 'snowflake_warehouse',
       _key: buildKey(rawWarehouse),
-      createdOn: getTime(createdOnStr),
+      createdOn: parseTimePropertyValue(createdOnStr),
       classification: 'unknown',
       encrypted: true,
       displayName: name,
@@ -48,7 +48,7 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
     {
       resourceName: 'Warehouse',
       _type: 'snowflake_warehouse',
-      _class: ['Datastore', 'Database'],
+      _class: ['DataStore', 'Database'],
     },
   ],
   relationships: [],

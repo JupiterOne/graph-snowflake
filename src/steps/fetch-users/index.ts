@@ -2,7 +2,7 @@ import {
   IntegrationStep,
   IntegrationEntityData,
   createIntegrationEntity,
-  getTime,
+  parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 import { SnowflakeUser, SnowflakeIntegrationConfig } from '../../types';
 import { createClient, Client as SnowflakeClient } from '../../client';
@@ -62,18 +62,21 @@ function convertUser(rawUser: RawUser): SnowflakeUserEntityData {
       username: name,
       email,
       hasRsaPublicKey: hasRsaPublicKeyStr === 'true',
-      createdOn: getTime(createdOnStr) as number,
+      createdOn: parseTimePropertyValue(createdOnStr) as number,
       disabled: disabled === 'true',
+      active: disabled !== 'true',
       hasPassword: hasPasswordStr === 'true',
       mustChangePassword: mustChangePasswordStr === 'true',
-      lastLogin: getTime(lastSuccessLoginStr) as number,
+      lastLogin: parseTimePropertyValue(lastSuccessLoginStr) as number,
       comment,
       owner,
       snowflakeLock: snowflakeLockStr === 'true',
-      minsToUnlock: getTime(minsToUnlockStr) as number,
+      minsToUnlock: parseTimePropertyValue(minsToUnlockStr) as number,
       lockedUntilTime:
-        lockUntilTimeStr !== 'NULL' ? getTime(lockUntilTimeStr) : null,
-      expiresAtTime: getTime(expiresAtTimeStr) as number,
+        lockUntilTimeStr !== 'NULL'
+          ? parseTimePropertyValue(lockUntilTimeStr)
+          : null,
+      expiresAtTime: parseTimePropertyValue(expiresAtTimeStr) as number,
       defaultWarehouse,
       defaultNamespace,
       defaultRole,
@@ -92,7 +95,7 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
     {
       resourceName: 'User',
       _type: 'snowflake_user',
-      _class: 'User',
+      _class: ['User'],
     },
   ],
   relationships: [],

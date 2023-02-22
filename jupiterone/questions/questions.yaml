@@ -1,0 +1,4 @@
+---
+sourceId: managed:snowflake
+integrationDefinitionId: '${integration_definition_id}'
+questions: []

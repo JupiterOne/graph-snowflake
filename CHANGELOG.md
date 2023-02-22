@@ -8,6 +8,17 @@ and this project adheres to
 
 ## [Unreleased]
 
+## Changed
+
+- Upgraded SDK dependencies to v8
+- Updated use of `getTime` → `parseTimePropertyValue`
+- Updated build.yml
+- Updated package.json main, types, and files to work with updated build.yml
+- Updated project [README.md](http://README.md '‌')
+- Added jupiterone/questions/questions.yaml file
+- Upgraded package.json scripts to match an `integration-template`
+- Updated tests to use latest patterns
+
 ## 2.2.0 - 2021-07-13
 
 ### Changed
