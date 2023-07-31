@@ -1,3 +1,63 @@
+# v3.0.0 (Mon Jul 31 2023)
+
+#### 💥 Breaking Change
+
+- INT-7016 - Upgrade integration [#46](https://github.com/JupiterOne/graph-snowflake/pull/46) ([@RPGPH](https://github.com/RPGPH) [@eXtremeX](https://github.com/eXtremeX))
+
+#### 🚀 Enhancement
+
+- Upgrade integration [#51](https://github.com/JupiterOne/graph-snowflake/pull/51) (ronald.arias@contractor.jupiterone.com)
+- INT-7883 - ingest roles and relate to users [#50](https://github.com/JupiterOne/graph-snowflake/pull/50) (ronald.arias@contractor.jupiterone.com)
+
+#### 🐛 Bug Fix
+
+- Merging CodeQL [#44](https://github.com/JupiterOne/graph-snowflake/pull/44) ([@electricgull](https://github.com/electricgull))
+- Merging CodeQL [#43](https://github.com/JupiterOne/graph-snowflake/pull/43) ([@VDubber](https://github.com/VDubber))
+- Update Integration Documentation [#42](https://github.com/JupiterOne/graph-snowflake/pull/42) ([@zemberdotnet](https://github.com/zemberdotnet))
+- Merged via j1-codeowners-automation-v1.0.0 [#41](https://github.com/JupiterOne/graph-snowflake/pull/41) ([@erichs](https://github.com/erichs))
+- Merged via j1-codeowners-automation-v1.0.0 [#39](https://github.com/JupiterOne/graph-snowflake/pull/39) ([@erichs](https://github.com/erichs))
+- Fix integration peerDep version [#29](https://github.com/JupiterOne/graph-snowflake/pull/29) ([@ndowmon](https://github.com/ndowmon))
+- Upgrade @jupiterone/integration-sdk-*@6.10.0 [#21](https://github.com/JupiterOne/graph-snowflake/pull/21) ([@ndowmon](https://github.com/ndowmon))
+- Add integration benefits [#19](https://github.com/JupiterOne/graph-snowflake/pull/19) ([@jayson-jensen-pro](https://github.com/jayson-jensen-pro) [@mknoedel](https://github.com/mknoedel))
+- deprecate set-env [#18](https://github.com/JupiterOne/graph-snowflake/pull/18) ([@mknoedel](https://github.com/mknoedel))
+- Update build.yml [#17](https://github.com/JupiterOne/graph-snowflake/pull/17) ([@aiwilliams](https://github.com/aiwilliams))
+- Point to docs about read permissions [#16](https://github.com/JupiterOne/graph-snowflake/pull/16) ([@aiwilliams](https://github.com/aiwilliams))
+- Upgrade to 2.2.0 [#15](https://github.com/JupiterOne/graph-snowflake/pull/15) ([@charlieduong94](https://github.com/charlieduong94))
+- Upgrading to latest integration sdk [#14](https://github.com/JupiterOne/graph-snowflake/pull/14) (darrius.wright@lifeomic.com)
+- Add index file and upgrade to sdk 1.0.0 [#13](https://github.com/JupiterOne/graph-snowflake/pull/13) ([@charlieduong94](https://github.com/charlieduong94))
+- Skip information schema when executing fetch-tables step. [#12](https://github.com/JupiterOne/graph-snowflake/pull/12) ([@austin-rausch](https://github.com/austin-rausch))
+- Improve key uniqueness for warehouse, database, schema and table steps. [#11](https://github.com/JupiterOne/graph-snowflake/pull/11) ([@austin-rausch](https://github.com/austin-rausch))
+- Fix package name [#9](https://github.com/JupiterOne/graph-snowflake/pull/9) ([@aiwilliams](https://github.com/aiwilliams))
+- v0.1.1 [#8](https://github.com/JupiterOne/graph-snowflake/pull/8) ([@austin-rausch](https://github.com/austin-rausch))
+- Add publish step [#7](https://github.com/JupiterOne/graph-snowflake/pull/7) ([@austin-rausch](https://github.com/austin-rausch))
+- Added all steps and tests. [#6](https://github.com/JupiterOne/graph-snowflake/pull/6) ([@austin-rausch](https://github.com/austin-rausch))
+- Misc changes and added client. [#4](https://github.com/JupiterOne/graph-snowflake/pull/4) ([@austin-rausch](https://github.com/austin-rausch))
+- Updated misc config files, added validator and schema [#2](https://github.com/JupiterOne/graph-snowflake/pull/2) ([@austin-rausch](https://github.com/austin-rausch))
+- Add missing config files and update .gitignore [#1](https://github.com/JupiterOne/graph-snowflake/pull/1) ([@charlieduong94](https://github.com/charlieduong94))
+
+#### ⚠️ Pushed to `main`
+
+- Initial commit ([@austin-rausch](https://github.com/austin-rausch))
+
+#### Authors: 14
+
+- Adam Williams ([@aiwilliams](https://github.com/aiwilliams))
+- Austin Rausch ([@austin-rausch](https://github.com/austin-rausch))
+- Cameron Griffin ([@electricgull](https://github.com/electricgull))
+- Charlie Duong ([@charlieduong94](https://github.com/charlieduong94))
+- Darrius Wright ([@softwarewright](https://github.com/softwarewright))
+- Erich Smith ([@erichs](https://github.com/erichs))
+- Jayson Jensen ([@jayson-jensen-pro](https://github.com/jayson-jensen-pro))
+- Matthew Zember ([@zemberdotnet](https://github.com/zemberdotnet))
+- Michael Knoedel ([@mknoedel](https://github.com/mknoedel))
+- Nick Dowmon ([@ndowmon](https://github.com/ndowmon))
+- Paul Ilaga ([@RPGPH](https://github.com/RPGPH))
+- Ronald Arias ([@RonaldEAM](https://github.com/RonaldEAM))
+- Samuel Poulton ([@VDubber](https://github.com/VDubber))
+- Stefan Virag ([@eXtremeX](https://github.com/eXtremeX))
+
+---
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
