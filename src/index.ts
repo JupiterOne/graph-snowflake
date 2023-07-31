@@ -8,6 +8,7 @@ import fetchTables from './steps/fetch-tables';
 import fetchUsers from './steps/fetch-users';
 import fetchWarehouses from './steps/fetch-warehouses';
 import { SnowflakeIntegrationConfig } from './types';
+import { roleSteps } from './steps/fetch-roles';
 
 export const invocationConfig: IntegrationInvocationConfig<SnowflakeIntegrationConfig> = {
   instanceConfigFields: {
@@ -32,5 +33,6 @@ export const invocationConfig: IntegrationInvocationConfig<SnowflakeIntegrationC
     fetchTables,
     fetchUsers,
     fetchWarehouses,
+    ...roleSteps,
   ],
 };

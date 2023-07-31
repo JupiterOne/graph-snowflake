@@ -15,6 +15,10 @@ interface SnowflakeUserEntityData extends IntegrationEntityData {
   source: RawUser;
 }
 
+export function getUserKey(userName: string): string {
+  return `snowflake-user:${userName}`;
+}
+
 function convertUser(rawUser: RawUser): SnowflakeUserEntityData {
   const {
     name,
@@ -53,7 +57,7 @@ function convertUser(rawUser: RawUser): SnowflakeUserEntityData {
     assign: {
       _class: ['User'],
       _type: 'snowflake_user',
-      _key: `snowflake-user:${name}`,
+      _key: getUserKey(name),
       displayName,
       firstName,
       lastName,

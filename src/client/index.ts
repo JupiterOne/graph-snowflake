@@ -430,6 +430,16 @@ export class Client {
     });
   }
 
+  fetchRoleGrants(roleName: string) {
+    const typeName = 'OfRoleGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = OF_ROLE_GRANTS(roleName);
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
   fetchRegions() {
     const typeName = 'Region';
     type ReturnType = RawSnowflake[typeof typeName];
