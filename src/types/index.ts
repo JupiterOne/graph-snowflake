@@ -37,6 +37,21 @@ export interface SnowflakeUser extends Entity {
   externalAuthDuoEnabled: boolean;
 }
 
+export interface SnowflakeRole extends Entity {
+  _class: ['AccessRole'];
+  _type: 'snowflake_role';
+  name: string;
+  owner: string;
+  comment: string;
+  createdOn: number | undefined;
+  isDefault: boolean;
+  isCurrent: boolean;
+  isInherited: boolean;
+  assignedToUsers: number;
+  grantedToRoles: number;
+  grantedRoles: number;
+}
+
 export interface SnowflakeWarehouse extends Entity {
   _class: ['DataStore', 'Database'];
   _type: 'snowflake_warehouse';

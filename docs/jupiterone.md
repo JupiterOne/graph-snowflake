@@ -84,6 +84,7 @@ The following entities are created:
 | Resources | Entity `_type`        | Entity `_class`         |
 | --------- | --------------------- | ----------------------- |
 | Database  | `snowflake_database`  | `DataStore`, `Database` |
+| Role      | `snowflake_role`      | `AccessRole`            |
 | Schema    | `snowflake_schema`    | `DataStore`, `Database` |
 | Table     | `snowflake_table`     | `DataStore`, `Database` |
 | User      | `snowflake_user`      | `User`                  |
@@ -97,6 +98,7 @@ The following relationships are created:
 | --------------------- | --------------------- | --------------------- |
 | `snowflake_database`  | **HAS**               | `snowflake_schema`    |
 | `snowflake_schema`    | **HAS**               | `snowflake_table`     |
+| `snowflake_user`      | **ASSIGNED**          | `snowflake_role`      |
 | `snowflake_warehouse` | **HAS**               | `snowflake_database`  |
 
 <!--
