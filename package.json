@@ -44,6 +44,7 @@
     "@jupiterone/integration-sdk-dev-tools": "^9.0.0",
     "@jupiterone/integration-sdk-testing": "^9.0.0",
     "@pollyjs/core": "^6.0.5",
+    "@types/node": "^20.4.5",
     "auto": "^10.36.5",
     "typescript-json-schema": "^0.42.0"
   },
