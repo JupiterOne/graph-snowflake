@@ -1,12 +1,8 @@
-dist/
 node_modules/
-coverage/
-.vscode/
+dist/
+.j1-integration/
+.j1-integration-cache/
 .env
-
-.DS_Store
-yarn-error.log
-.npmrc
-
-.j1-integration
 .eslintcache
+tsconfig.tsbuildinfo
+.npmrc
