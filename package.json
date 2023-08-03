@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "ajv": "^6.12.2",
-    "snowflake-sdk": "^1.5.1"
+    "snowflake-sdk": "1.5.1"
   },
   "devDependencies": {
     "@jupiterone/integration-sdk-core": "^9.0.0",
