@@ -1,3 +1,15 @@
+# v3.0.2 (Fri Aug 04 2023)
+
+#### 🐛 Bug Fix
+
+- fix snowflake-sdk to v1.6.11 [#53](https://github.com/JupiterOne/graph-snowflake/pull/53) (ronald.arias@contractor.jupiterone.com)
+
+#### Authors: 1
+
+- Ronald Arias ([@RonaldEAM](https://github.com/RonaldEAM))
+
+---
+
 # v3.0.1 (Thu Aug 03 2023)
 
 #### 🐛 Bug Fix
