@@ -1,48 +1,18 @@
 import {
-  IntegrationEntityData,
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
   createDirectRelationship,
   createIntegrationEntity,
-  parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 import { createClient, Client as SnowflakeClient } from '../../client';
 import '../../client';
-import { SnowflakeIntegrationConfig, SnowflakeRole } from '../../types';
-import { RawSnowflake } from '../../client/types';
+import { SnowflakeIntegrationConfig } from '../../types';
 import { getUserKey } from '../fetch-users';
-
-type RawRole = RawSnowflake['Role'];
-interface SnowflakeRoleEntityData extends IntegrationEntityData {
-  assign: SnowflakeRole;
-  source: RawRole;
-}
-
-function getRoleKey(roleName: string): string {
-  return `snowflake-role:${roleName}`;
-}
-
-function convertRole(rawRole: RawRole): SnowflakeRoleEntityData {
-  return {
-    source: rawRole,
-    assign: {
-      _class: ['AccessRole'],
-      _type: 'snowflake_role',
-      _key: getRoleKey(rawRole.name),
-      name: rawRole.name,
-      owner: rawRole.owner,
-      comment: rawRole.comment,
-      createdOn: parseTimePropertyValue(rawRole.created_on),
-      isDefault: rawRole.is_default === 'Y',
-      isCurrent: rawRole.is_current === 'Y',
-      isInherited: rawRole.is_inherited === 'Y',
-      assignedToUsers: rawRole.assigned_to_users,
-      grantedToRoles: rawRole.granted_to_roles,
-      grantedRoles: rawRole.granted_roles,
-    },
-  };
-}
+import {
+  SnowflakeRoleEntityData,
+  convertRole,
+} from '../../converters/role.converter';
 
 export async function fetchRoles({
   logger,
@@ -58,7 +28,9 @@ export async function fetchRoles({
 
     for await (const rawRole of client.fetchRoles()) {
       const snowflakeRoleData = convertRole(rawRole);
-      roles.push(snowflakeRoleData);
+      if (snowflakeRoleData) {
+        roles.push(snowflakeRoleData);
+      }
     }
     logger.info('Done fetching roles.');
   } catch (error) {
@@ -91,9 +63,9 @@ export async function buildUserRolesRelationships({
     await jobState.iterateEntities(
       { _type: 'snowflake_role' },
       async (roleEntity) => {
-        for await (const rawGrant of (client as SnowflakeClient).fetchRoleGrants(
-          roleEntity.name as string,
-        )) {
+        for await (const rawGrant of (
+          client as SnowflakeClient
+        ).fetchRoleGrants(roleEntity.name as string)) {
           if (rawGrant.granted_to !== 'USER') {
             continue;
           }
@@ -154,7 +126,7 @@ export const roleSteps: IntegrationStep<SnowflakeIntegrationConfig>[] = [
         targetType: 'snowflake_role',
       },
     ],
-    dependsOn: ['fetch-roles', 'fetch-users'],
+    dependsOn: ['fetch-users'],
     executionHandler: buildUserRolesRelationships,
   },
 ];

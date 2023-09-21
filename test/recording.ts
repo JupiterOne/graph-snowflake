@@ -18,12 +18,8 @@ export function setupProjectRecording(
       redact(entry);
     },
     options: {
-      matchRequestsBy: {
-        url: {
-          query: false,
-          hostname: false,
-        },
-      },
+      mode: 'record',
+      recordFailedRequests: true,
     },
   });
 }

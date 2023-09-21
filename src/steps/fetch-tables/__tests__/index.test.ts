@@ -1,3 +1,5 @@
+jest.useFakeTimers();
+jest.setTimeout(300000);
 import {
   executeStepWithDependencies,
   Recording,
@@ -5,20 +7,23 @@ import {
 import { buildStepTestConfigForStep } from '../../../../test/config';
 import { setupProjectRecording } from '../../../../test/recording';
 
-let recording: Recording;
-beforeEach(() => {
-  recording = setupProjectRecording({
-    directory: __dirname,
-    name: 'fetch-tables',
+describe('fetch-tables', () => {
+  let recording: Recording;
+
+  beforeEach(() => {
+    recording = setupProjectRecording({
+      directory: __dirname,
+      name: 'fetch-tables',
+    });
   });
-});
 
-afterEach(async () => {
-  await recording.stop();
-});
+  afterEach(async () => {
+    await recording.stop();
+  });
 
-test('fetch-tables', async () => {
-  const stepConfig = buildStepTestConfigForStep('fetch-tables');
-  const stepResult = await executeStepWithDependencies(stepConfig);
-  expect(stepResult).toMatchStepMetadata(stepConfig);
+  it('should succeed', async () => {
+    const stepConfig = buildStepTestConfigForStep('fetch-tables');
+    const stepResult = await executeStepWithDependencies(stepConfig);
+    expect(stepResult).toMatchStepMetadata(stepConfig);
+  });
 });

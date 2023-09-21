@@ -12,6 +12,7 @@ const {
   FUNCTIONS,
   GLOBAL_GRANTS,
   ACCOUNT_GRANTS,
+  TO_DATABASE_GRANTS,
   TO_ROLE_GRANTS,
   TO_USER_GRANTS,
   TO_SHARE_GRANTS,
@@ -239,12 +240,8 @@ export class Client {
   }
 
   getCurrentValues() {
-    const {
-      currentRole,
-      currentWarehouse,
-      currentDatabase,
-      currentSchema,
-    } = this;
+    const { currentRole, currentWarehouse, currentDatabase, currentSchema } =
+      this;
     return {
       currentRole,
       currentWarehouse,
@@ -309,6 +306,16 @@ export class Client {
     const typeName = 'AccountPrivilegeGrant';
     type ReturnType = RawSnowflake[typeof typeName];
     const statement = ACCOUNT_GRANTS;
+    return this.withValidator<ReturnType>({
+      typeName,
+      statement,
+    });
+  }
+
+  fetchToDatabaseGrants(databaseName: string) {
+    const typeName = 'OnDatabasePrivilegeGrant';
+    type ReturnType = RawSnowflake[typeof typeName];
+    const statement = TO_DATABASE_GRANTS(databaseName);
     return this.withValidator<ReturnType>({
       typeName,
       statement,

@@ -10,29 +10,30 @@ import fetchWarehouses from './steps/fetch-warehouses';
 import { SnowflakeIntegrationConfig } from './types';
 import { roleSteps } from './steps/fetch-roles';
 
-export const invocationConfig: IntegrationInvocationConfig<SnowflakeIntegrationConfig> = {
-  instanceConfigFields: {
-    username: {
-      type: 'string',
+export const invocationConfig: IntegrationInvocationConfig<SnowflakeIntegrationConfig> =
+  {
+    instanceConfigFields: {
+      username: {
+        type: 'string',
+      },
+      account: {
+        type: 'string',
+      },
+      password: {
+        type: 'string',
+        mask: true,
+      },
+      role: {
+        type: 'string',
+      },
     },
-    account: {
-      type: 'string',
-    },
-    password: {
-      type: 'string',
-      mask: true,
-    },
-    role: {
-      type: 'string',
-    },
-  },
-  validateInvocation,
-  integrationSteps: [
-    fetchDatabases,
-    fetchSchemas,
-    fetchTables,
-    fetchUsers,
-    fetchWarehouses,
-    ...roleSteps,
-  ],
-};
+    validateInvocation,
+    integrationSteps: [
+      fetchDatabases,
+      fetchSchemas,
+      fetchTables,
+      fetchUsers,
+      fetchWarehouses,
+      ...roleSteps,
+    ],
+  };

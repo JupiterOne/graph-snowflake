@@ -96,6 +96,7 @@ The following relationships are created:
 
 | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
 | --------------------- | --------------------- | --------------------- |
+| `snowflake_database`  | **ALLOWS**            | `snowflake_role`      |
 | `snowflake_database`  | **HAS**               | `snowflake_schema`    |
 | `snowflake_schema`    | **HAS**               | `snowflake_table`     |
 | `snowflake_user`      | **ASSIGNED**          | `snowflake_role`      |
