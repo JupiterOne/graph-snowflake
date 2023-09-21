@@ -16,15 +16,7 @@ function getRoleKey(roleName: string): string {
   return `snowflake-role:${roleName}`;
 }
 
-function isRawRole(rawRole: RawRole): rawRole is RawRole {
-  return !!rawRole.name;
-}
-
-export function convertRole(rawRole: RawRole): SnowflakeRoleEntityData | null {
-  if (!isRawRole(rawRole)) {
-    return null;
-  }
-
+export function convertRole(rawRole: RawRole): SnowflakeRoleEntityData {
   return {
     source: rawRole,
     assign: {

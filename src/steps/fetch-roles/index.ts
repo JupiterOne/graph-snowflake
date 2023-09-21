@@ -28,9 +28,7 @@ export async function fetchRoles({
 
     for await (const rawRole of client.fetchRoles()) {
       const snowflakeRoleData = convertRole(rawRole);
-      if (snowflakeRoleData) {
-        roles.push(snowflakeRoleData);
-      }
+      roles.push(snowflakeRoleData);
     }
     logger.info('Done fetching roles.');
   } catch (error) {
