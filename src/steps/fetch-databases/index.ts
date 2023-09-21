@@ -14,7 +14,6 @@ import {
   SnowflakeDatabase,
   SnowflakeWarehouse,
   SnowflakeIntegrationConfig,
-  SnowflakeRole,
 } from '../../types';
 
 type RawDatabase = RawSnowflake['Database'];
@@ -74,23 +73,9 @@ async function executionHandler({ logger, jobState, instance }) {
   const warehouseMap = new Map<string, SnowflakeWarehouse | undefined>();
   const databases: SnowflakeDatabaseEntityData[] = [];
 
-  const rolesMap = new Map<string, SnowflakeRole>();
-  const databasesWithRole: {
-    database: SnowflakeDatabase;
-    role: SnowflakeRole;
-  }[] = [];
-
   try {
     client = await createClient({ ...config, logger });
     logger.info('Fetching databases...');
-
-    await jobState.iterateEntities(
-      { _type: 'snowflake_role' },
-      async (role) => {
-        rolesMap.set(role.name, role);
-        return Promise.resolve();
-      },
-    );
 
     await jobState.iterateEntities(
       { _type: 'snowflake_warehouse' },
@@ -109,12 +94,20 @@ async function executionHandler({ logger, jobState, instance }) {
             for await (const rawPrivilege of client!.fetchToDatabaseGrants(
               rawDatabase.name,
             )) {
-              const savedRole = rolesMap.get(rawPrivilege.grantee_name);
-              if (savedRole) {
-                databasesWithRole.push({
-                  database: snowflakeDatabase.assign,
-                  role: savedRole,
-                });
+              const exists = jobState.hasKey(
+                `snowflake-role:${rawPrivilege.grantee_name}`,
+              );
+
+              if (exists) {
+                await jobState.addRelationships([
+                  createDirectRelationship({
+                    _class: RelationshipClass.ALLOWS,
+                    fromKey: snowflakeDatabase.assign._key,
+                    fromType: snowflakeDatabase.assign._type,
+                    toKey: `snowflake-role:${rawPrivilege.grantee_name}`,
+                    toType: 'snowflake_role',
+                  }),
+                ]);
               }
             }
           }
@@ -155,16 +148,6 @@ async function executionHandler({ logger, jobState, instance }) {
         }),
       ]);
     }
-  }
-
-  for (const databaseWithRole of databasesWithRole) {
-    await jobState.addRelationships([
-      createDirectRelationship({
-        _class: RelationshipClass.ALLOWS,
-        from: databaseWithRole.database,
-        to: databaseWithRole.role,
-      }),
-    ]);
   }
 }
 
