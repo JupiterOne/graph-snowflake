@@ -4,6 +4,8 @@ const COMMANDS = {
   FUNCTIONS: 'SHOW FUNCTIONS;',
   GLOBAL_GRANTS: 'SHOW GRANTS;',
   ACCOUNT_GRANTS: 'SHOW GRANTS ON ACCOUNT;',
+  TO_DATABASE_GRANTS: (databaseName: string) =>
+    `SHOW GRANTS ON DATABASE ${databaseName};`,
   TO_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS TO ROLE ${roleName};`,
   TO_USER_GRANTS: (userName: string) => `SHOW GRANTS TO USER ${userName};`,
   TO_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS TO SHARE ${shareName};`,

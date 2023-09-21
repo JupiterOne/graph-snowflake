@@ -19,8 +19,14 @@ export const databaseSpec: StepSpec<SnowflakeIntegrationConfig>[] = [
         _class: RelationshipClass.HAS,
         targetType: 'snowflake_database',
       },
+      {
+        _type: 'snowflake_database_allows_role',
+        sourceType: 'snowflake_database',
+        _class: RelationshipClass.ALLOWS,
+        targetType: 'snowflake_role',
+      },
     ],
-    dependsOn: ['fetch-warehouses'],
+    dependsOn: ['fetch-warehouses', 'fetch-roles'],
     implemented: true,
   },
 ];

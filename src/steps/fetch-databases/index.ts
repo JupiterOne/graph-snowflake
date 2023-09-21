@@ -67,6 +67,90 @@ function convertDatabase(
   };
 }
 
+async function executionHandler({ logger, jobState, instance }) {
+  const { config } = instance;
+  let client: SnowflakeClient | undefined;
+  const warehouseMap = new Map<string, SnowflakeWarehouse | undefined>();
+  const databases: SnowflakeDatabaseEntityData[] = [];
+
+  try {
+    client = await createClient({ ...config, logger });
+    logger.info('Fetching databases...');
+
+    await jobState.iterateEntities(
+      { _type: 'snowflake_warehouse' },
+      async (warehouse: SnowflakeWarehouse) => {
+        warehouseMap.set(warehouse.name, warehouse);
+
+        await client!.setWarehouse(warehouse.name);
+        for await (const rawDatabase of client!.fetchDatabases()) {
+          const snowflakeDatabase = convertDatabase(
+            rawDatabase,
+            warehouse.name,
+          );
+          databases.push(snowflakeDatabase);
+
+          if (rawDatabase.owner !== '') {
+            for await (const rawPrivilege of client!.fetchToDatabaseGrants(
+              rawDatabase.name,
+            )) {
+              const exists = jobState.hasKey(
+                `snowflake-role:${rawPrivilege.grantee_name}`,
+              );
+
+              if (exists) {
+                await jobState.addRelationships([
+                  createDirectRelationship({
+                    _class: RelationshipClass.ALLOWS,
+                    fromKey: snowflakeDatabase.assign._key,
+                    fromType: snowflakeDatabase.assign._type,
+                    toKey: `snowflake-role:${rawPrivilege.grantee_name}`,
+                    toType: 'snowflake_role',
+                  }),
+                ]);
+              }
+            }
+          }
+        }
+      },
+    );
+
+    logger.info('Done fetching databases.');
+  } catch (error) {
+    logger.error({ error }, 'Error executing step');
+    throw error;
+  } finally {
+    try {
+      if (client) {
+        await client.destroy();
+      }
+    } catch (error) {
+      logger.error({ error }, 'Failed to destroy snowflake client');
+    }
+  }
+
+  await jobState.addEntities(
+    databases.map((database) =>
+      createIntegrationEntity({ entityData: database }),
+    ),
+  );
+
+  for (const database of databases) {
+    const { assign: databaseEntity } = database;
+    const { warehouseName } = databaseEntity;
+    const warehouse = warehouseMap.get(warehouseName);
+    if (warehouse) {
+      await jobState.addRelationships([
+        createDirectRelationship({
+          _class: RelationshipClass.HAS,
+          from: warehouse,
+          to: databaseEntity,
+        }),
+      ]);
+    }
+  }
+}
+
 const step: IntegrationStep<SnowflakeIntegrationConfig> = {
   id: 'fetch-databases',
   name: 'Fetch Databases',
@@ -84,68 +168,15 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
       _class: RelationshipClass.HAS,
       targetType: 'snowflake_database',
     },
+    {
+      _type: 'snowflake_database_allows_role',
+      sourceType: 'snowflake_database',
+      _class: RelationshipClass.ALLOWS,
+      targetType: 'snowflake_role',
+    },
   ],
-  dependsOn: ['fetch-warehouses'],
-  async executionHandler({ logger, jobState, instance }) {
-    const { config } = instance;
-    let client: SnowflakeClient | undefined;
-    const warehouseMap = new Map<string, SnowflakeWarehouse | undefined>();
-    const databases: SnowflakeDatabaseEntityData[] = [];
-    try {
-      client = await createClient({ ...config, logger });
-      logger.info('Fetching databases...');
-
-      await jobState.iterateEntities(
-        { _type: 'snowflake_warehouse' },
-        async (warehouse: SnowflakeWarehouse) => {
-          warehouseMap.set(warehouse.name, warehouse);
-
-          await client!.setWarehouse(warehouse.name);
-          for await (const rawDatabase of client!.fetchDatabases()) {
-            const snowflakeDatabase = convertDatabase(
-              rawDatabase,
-              warehouse.name,
-            );
-            databases.push(snowflakeDatabase);
-          }
-        },
-      );
-
-      logger.info('Done fetching databases.');
-    } catch (error) {
-      logger.error({ error }, 'Error executing step');
-      throw error;
-    } finally {
-      try {
-        if (client) {
-          await client.destroy();
-        }
-      } catch (error) {
-        logger.error({ error }, 'Failed to destroy snowflake client');
-      }
-    }
-
-    await jobState.addEntities(
-      databases.map((database) =>
-        createIntegrationEntity({ entityData: database }),
-      ),
-    );
-
-    for (const database of databases) {
-      const { assign: databaseEntity } = database;
-      const { warehouseName } = databaseEntity;
-      const warehouse = warehouseMap.get(warehouseName);
-      if (warehouse) {
-        await jobState.addRelationships([
-          createDirectRelationship({
-            _class: RelationshipClass.HAS,
-            from: warehouse,
-            to: databaseEntity,
-          }),
-        ]);
-      }
-    }
-  },
+  dependsOn: ['fetch-warehouses', 'fetch-roles'],
+  executionHandler,
 };
 
 export default step;

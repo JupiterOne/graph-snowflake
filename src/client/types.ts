@@ -299,6 +299,19 @@ export type RawSnowflake = {
     granted_by: string;
   };
 
+  // output from `SHOW GRANTS ON DATABASE <database name>;`
+  OnDatabasePrivilegeGrant: {
+    created_on: string;
+    privilege: string;
+    granted_on: string;
+    name: string;
+    granted_to: string;
+    grantee_name: string;
+    grant_option: BoolStr;
+    granted_by: string;
+    granted_by_role_type: string;
+  };
+
   // output from `SHOW GRANTS TO USER <user name>;`
   ToUserPrivilegeGrant: {
     created_on: string;

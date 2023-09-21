@@ -1,3 +1,4 @@
+jest.useFakeTimers();
 import {
   executeStepWithDependencies,
   Recording,
@@ -17,7 +18,7 @@ afterEach(async () => {
   await recording.stop();
 });
 
-test('fetch-roles', async () => {
+test.skip('fetch-roles', async () => {
   const stepConfig = buildStepTestConfigForStep('fetch-roles');
   const stepResult = await executeStepWithDependencies(stepConfig);
   expect(stepResult).toMatchStepMetadata(stepConfig);

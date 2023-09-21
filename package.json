@@ -37,19 +37,20 @@
   },
   "dependencies": {
     "ajv": "^6.12.2",
+    "jest-environment-jsdom": "^29.7.0",
     "snowflake-sdk": "1.6.11"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^9.0.0",
-    "@jupiterone/integration-sdk-dev-tools": "^9.0.0",
-    "@jupiterone/integration-sdk-testing": "^9.0.0",
+    "@jupiterone/integration-sdk-core": "^10.5.3",
+    "@jupiterone/integration-sdk-dev-tools": "^10.5.3",
+    "@jupiterone/integration-sdk-testing": "^10.5.3",
     "@pollyjs/core": "^6.0.5",
     "@types/node": "^20.4.5",
     "auto": "^10.36.5",
     "typescript-json-schema": "^0.42.0"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^9.0.0"
+    "@jupiterone/integration-sdk-core": "^10.5.3"
   },
   "auto": {
     "plugins": [
