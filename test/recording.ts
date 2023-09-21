@@ -18,6 +18,13 @@ export function setupProjectRecording(
       redact(entry);
     },
     options: {
+      matchRequestsBy: {
+        url: {
+          query: false,
+          hostname: false,
+        },
+        body: true,
+      },
       mode: 'record',
       recordFailedRequests: true,
     },
@@ -25,13 +32,13 @@ export function setupProjectRecording(
 }
 
 function redact(entry): void {
-  if (entry.request.postData) {
-    entry.request.postData.text = '[REDACTED]';
-  }
+  // if (entry.request.postData) {
+  //   entry.request.postData.text = '[REDACTED]';
+  // }
 
-  if (!entry.response.content.text) {
-    return;
-  }
+  // if (!entry.response.content.text) {
+  //   return;
+  // }
 
   //let's unzip the entry so we can modify it
   mutations.unzipGzippedRecordingEntry(entry);

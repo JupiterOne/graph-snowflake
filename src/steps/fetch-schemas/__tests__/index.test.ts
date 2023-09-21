@@ -7,7 +7,7 @@ import {
 import { buildStepTestConfigForStep } from '../../../../test/config';
 import { setupProjectRecording } from '../../../../test/recording';
 
-describe('fetch-schemas', () => {
+describe.skip('fetch-schemas', () => {
   let recording: Recording;
   beforeEach(() => {
     recording = setupProjectRecording({

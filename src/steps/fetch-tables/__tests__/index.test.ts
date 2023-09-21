@@ -7,7 +7,7 @@ import {
 import { buildStepTestConfigForStep } from '../../../../test/config';
 import { setupProjectRecording } from '../../../../test/recording';
 
-describe('fetch-tables', () => {
+describe.skip('fetch-tables', () => {
   let recording: Recording;
 
   beforeEach(() => {

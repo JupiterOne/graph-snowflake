@@ -111,13 +111,11 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
     const schemaMap = new Map<string, SnowflakeSchema | undefined>();
     const tables: SnowflakeTableEntityData[] = [];
     try {
-      console.log('before create client');
       client = await createClient({ ...config, logger });
       logger.info('Fetching tables...');
       await jobState.iterateEntities(
         { _type: 'snowflake_schema' },
         async (schema: SnowflakeSchema) => {
-          console.log('iterating schemas');
           // per: https://docs.snowflake.com/en/sql-reference/info-schema.html
           // the `INFORMATION_SCHEMA` is a system defined schema which provides
           // nice views for metadata that probably should have been
@@ -133,7 +131,6 @@ const step: IntegrationStep<SnowflakeIntegrationConfig> = {
           await client!.setDatabase(schema.databaseName);
           await client!.setSchema(schema.name);
           for await (const rawTable of client!.fetchTables()) {
-            console.log('iterating tables');
             const snowflakeTable = convertTable(rawTable, schema.warehouseName);
             tables.push(snowflakeTable);
           }
