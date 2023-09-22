@@ -112,4 +112,3 @@ different naming conventions).
 We are not currently using the functionality for auto to update the CHANGELOG.
 As such, please remember to update CHANGELOG.md with the appropriate version,
 date, and changes.
-
