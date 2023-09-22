@@ -1,3 +1,15 @@
+# v3.1.0 (Fri Sep 22 2023)
+
+#### 🚀 Enhancement
+
+- INT-8423: [#54](https://github.com/JupiterOne/graph-snowflake/pull/54) ([@mishelashala](https://github.com/mishelashala))
+
+#### Authors: 1
+
+- Michell Ayala ([@mishelashala](https://github.com/mishelashala))
+
+---
+
 # v3.0.2 (Fri Aug 04 2023)
 
 #### 🐛 Bug Fix
