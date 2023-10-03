@@ -1,3 +1,22 @@
+# v3.1.1 (Tue Oct 03 2023)
+
+#### 🐛 Bug Fix
+
+- fix duplicate key on user role relationship [#56](https://github.com/JupiterOne/graph-snowflake/pull/56) (ronald.arias@contractor.jupiterone.com)
+
+#### 🔩 Dependency Updates
+
+- Bump y18n from 4.0.0 to 4.0.3 [#27](https://github.com/JupiterOne/graph-snowflake/pull/27) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump glob-parent from 5.1.1 to 5.1.2 [#25](https://github.com/JupiterOne/graph-snowflake/pull/25) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump color-string from 1.5.3 to 1.5.5 [#24](https://github.com/JupiterOne/graph-snowflake/pull/24) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Ronald Arias ([@RonaldEAM](https://github.com/RonaldEAM))
+
+---
+
 # v3.1.0 (Fri Sep 22 2023)
 
 #### 🚀 Enhancement
