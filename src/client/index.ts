@@ -240,8 +240,12 @@ export class Client {
   }
 
   getCurrentValues() {
-    const { currentRole, currentWarehouse, currentDatabase, currentSchema } =
-      this;
+    const {
+      currentRole,
+      currentWarehouse,
+      currentDatabase,
+      currentSchema,
+    } = this;
     return {
       currentRole,
       currentWarehouse,
