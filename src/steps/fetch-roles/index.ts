@@ -61,9 +61,9 @@ export async function buildUserRolesRelationships({
     await jobState.iterateEntities(
       { _type: 'snowflake_role' },
       async (roleEntity) => {
-        for await (const rawGrant of (client as SnowflakeClient).fetchRoleGrants(
-          roleEntity.name as string,
-        )) {
+        for await (const rawGrant of (
+          client as SnowflakeClient
+        ).fetchRoleGrants(roleEntity.name as string)) {
           if (rawGrant.granted_to !== 'USER') {
             continue;
           }
