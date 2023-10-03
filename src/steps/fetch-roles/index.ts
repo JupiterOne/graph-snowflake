@@ -67,18 +67,20 @@ export async function buildUserRolesRelationships({
           if (rawGrant.granted_to !== 'USER') {
             continue;
           }
-          const userEntity = await jobState.findEntity(
-            getUserKey(rawGrant.grantee_name),
-          );
-          if (!userEntity) {
+          const userEntityKey = getUserKey(rawGrant.grantee_name);
+          if (!jobState.hasKey(userEntityKey)) {
             continue;
           }
           const userRoleRelationship = createDirectRelationship({
             _class: RelationshipClass.ASSIGNED,
-            from: userEntity,
-            to: roleEntity,
+            fromKey: userEntityKey,
+            fromType: 'snowflake_user',
+            toKey: roleEntity._key,
+            toType: 'snowflake_role',
           });
-          await jobState.addRelationship(userRoleRelationship);
+          if (!jobState.hasKey(userRoleRelationship._key)) {
+            await jobState.addRelationship(userRoleRelationship);
+          }
         }
       },
     );
