@@ -1,0 +1,12 @@
+openapi: 3.0.1
+info:
+  title: '@jupiterone/graph-snowflake'
+  description: A graph conversion tool for https://www.snowflake.com/.
+  x-cortex-git:
+    github:
+      repository: JupiterOne/graph-snowflake
+  x-cortex-owners:
+    - type: group
+      name: JupiterOne/integrations
+  x-cortex-service-groups: tier-4
+  x-cortex-tag: '@jupiterone/graph-snowflake'
