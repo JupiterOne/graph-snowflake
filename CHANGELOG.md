@@ -1,3 +1,20 @@
+# v3.1.2 (Tue Oct 24 2023)
+
+#### 🐛 Bug Fix
+
+- Add error handling [#57](https://github.com/JupiterOne/graph-snowflake/pull/57) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### ⚠️ Pushed to `main`
+
+- Populate CODEOWENRS, baseline package.json and baseline cortex.yaml ([@jablonnc](https://github.com/jablonnc))
+
+#### Authors: 2
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+- Noah Jablonski ([@jablonnc](https://github.com/jablonnc))
+
+---
+
 # v3.1.1 (Tue Oct 03 2023)
 
 #### 🐛 Bug Fix
