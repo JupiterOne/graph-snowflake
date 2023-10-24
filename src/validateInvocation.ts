@@ -1,4 +1,7 @@
-import { IntegrationExecutionContext } from '@jupiterone/integration-sdk-core';
+import {
+  IntegrationExecutionContext,
+  IntegrationValidationError,
+} from '@jupiterone/integration-sdk-core';
 import { createClient } from './client';
 
 export default async function validateInvocation(
@@ -14,7 +17,7 @@ export default async function validateInvocation(
   if (await isConfigurationValid(context.logger, context.instance.config)) {
     context.logger.info('Integration instance is valid!');
   } else {
-    throw new Error(
+    throw new IntegrationValidationError(
       'Integration instance invalid, Failed to authenticate with provided credentials',
     );
   }
