@@ -1,6 +1,9 @@
 import { Readable } from 'stream';
 import snowflake from 'snowflake-sdk';
-import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
+import {
+  IntegrationLogger,
+  IntegrationProviderAPIError,
+} from '@jupiterone/integration-sdk-core';
 import sqlCommands from './sqlCommands';
 import { RawSnowflake } from './types';
 import validator from './validator';
@@ -114,20 +117,32 @@ async function* withValidator<T extends SnowflakeTypes>(
   logger: IntegrationLogger,
   fn: ExecuteSqlCommandFn<T>,
 ): AsyncIterable<T> {
-  const iterable = fn();
-  for await (const row of iterable) {
-    try {
-      const validateResult = validator.validate(`#/definitions/RawSnowflake`, {
-        [key]: row,
-      });
-      logger.debug({ validateResult }, 'Validate result');
-      if (!validateResult) {
-        logger.info({ errorText: validator.errorsText() }, 'Error text');
+  try {
+    const iterable = fn();
+    for await (const row of iterable) {
+      try {
+        const validateResult = validator.validate(
+          `#/definitions/RawSnowflake`,
+          {
+            [key]: row,
+          },
+        );
+        logger.debug({ validateResult }, 'Validate result');
+        if (!validateResult) {
+          logger.info({ errorText: validator.errorsText() }, 'Error text');
+        }
+      } catch (err) {
+        logger.info({ err }, 'Error while validating');
       }
-    } catch (err) {
-      logger.info({ err }, 'Error while validating');
+      yield row;
     }
-    yield row;
+  } catch (error) {
+    throw new IntegrationProviderAPIError({
+      endpoint: key,
+      status: error.code,
+      statusText: error.name,
+      message: error.message,
+    });
   }
 }
 
