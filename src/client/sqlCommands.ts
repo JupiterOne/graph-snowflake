@@ -5,16 +5,16 @@ const COMMANDS = {
   GLOBAL_GRANTS: 'SHOW GRANTS;',
   ACCOUNT_GRANTS: 'SHOW GRANTS ON ACCOUNT;',
   TO_DATABASE_GRANTS: (databaseName: string) =>
-    `SHOW GRANTS ON DATABASE ${databaseName};`,
-  TO_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS TO ROLE ${roleName};`,
-  TO_USER_GRANTS: (userName: string) => `SHOW GRANTS TO USER ${userName};`,
-  TO_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS TO SHARE ${shareName};`,
-  OF_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS OF SHARE ${shareName};`,
-  OF_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS OF ROLE ${roleName};`,
+    `SHOW GRANTS ON DATABASE "${databaseName}";`,
+  TO_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS TO ROLE "${roleName}";`,
+  TO_USER_GRANTS: (userName: string) => `SHOW GRANTS TO USER "${userName}";`, 
+  TO_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS TO SHARE "${shareName}";`, 
+  OF_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS OF SHARE "${shareName}";`,  
+  OF_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS OF ROLE "${roleName}";`,    
   FUTURE_SCHEMA_GRANTS: (schemaName: string) =>
-    `SHOW FUTURE GRANTS IN SCHEMA ${schemaName}`,
+    `SHOW FUTURE GRANTS IN SCHEMA "${schemaName}"`,
   FUTURE_DATABASE_GRANTS: (databaseName: string) =>
-    `SHOW FUTURE GRANTS IN DATABASE ${databaseName}`,
+    `SHOW FUTURE GRANTS IN DATABASE "${databaseName}"`,
   ON_OBJECT_GRANTS: ({
     objectType,
     objectName,
@@ -27,7 +27,7 @@ const COMMANDS = {
     // almost everything... ugh.
     objectType: string;
     objectName: string;
-  }) => `SHOW GRANTS ON ${objectType} ${objectName};`,
+  }) => `SHOW GRANTS ON "${objectType}" "${objectName}";`,
   INTEGRATIONS: 'SHOW INTEGRATIONS;',
   MANAGED_ACCOUNTS: 'SHOW MANAGED ACCOUNTS;',
   PIPES: 'SHOW PIPES;',
