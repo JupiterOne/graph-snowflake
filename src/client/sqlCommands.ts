@@ -7,10 +7,12 @@ const COMMANDS = {
   TO_DATABASE_GRANTS: (databaseName: string) =>
     `SHOW GRANTS ON DATABASE "${databaseName}";`,
   TO_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS TO ROLE "${roleName}";`,
-  TO_USER_GRANTS: (userName: string) => `SHOW GRANTS TO USER "${userName}";`, 
-  TO_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS TO SHARE "${shareName}";`, 
-  OF_SHARE_GRANTS: (shareName: string) => `SHOW GRANTS OF SHARE "${shareName}";`,  
-  OF_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS OF ROLE "${roleName}";`,    
+  TO_USER_GRANTS: (userName: string) => `SHOW GRANTS TO USER "${userName}";`,
+  TO_SHARE_GRANTS: (shareName: string) =>
+    `SHOW GRANTS TO SHARE "${shareName}";`,
+  OF_SHARE_GRANTS: (shareName: string) =>
+    `SHOW GRANTS OF SHARE "${shareName}";`,
+  OF_ROLE_GRANTS: (roleName: string) => `SHOW GRANTS OF ROLE "${roleName}";`,
   FUTURE_SCHEMA_GRANTS: (schemaName: string) =>
     `SHOW FUTURE GRANTS IN SCHEMA "${schemaName}"`,
   FUTURE_DATABASE_GRANTS: (databaseName: string) =>
