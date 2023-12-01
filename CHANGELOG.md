@@ -1,3 +1,15 @@
+# v3.2.0 (Fri Dec 01 2023)
+
+#### 🚀 Enhancement
+
+- [INT-9135] - surround properties in quotes to avoid issues caused by dashes [#58](https://github.com/JupiterOne/graph-snowflake/pull/58) ([@dobregons](https://github.com/dobregons))
+
+#### Authors: 1
+
+- David Obregón Sánchez ([@dobregons](https://github.com/dobregons))
+
+---
+
 # v3.1.2 (Tue Oct 24 2023)
 
 #### 🐛 Bug Fix
