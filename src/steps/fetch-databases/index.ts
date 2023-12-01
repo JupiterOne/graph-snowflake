@@ -5,6 +5,8 @@ import {
   parseTimePropertyValue,
   createDirectRelationship,
   RelationshipClass,
+  IntegrationStepExecutionContext,
+  IntegrationWarnEventName,
 } from '@jupiterone/integration-sdk-core';
 
 import { createClient, Client as SnowflakeClient } from '../../client';
@@ -67,7 +69,11 @@ function convertDatabase(
   };
 }
 
-async function executionHandler({ logger, jobState, instance }) {
+async function executionHandler({
+  logger,
+  jobState,
+  instance,
+}: IntegrationStepExecutionContext<SnowflakeIntegrationConfig>) {
   const { config } = instance;
   let client: SnowflakeClient | undefined;
   const warehouseMap = new Map<string, SnowflakeWarehouse | undefined>();
@@ -76,13 +82,22 @@ async function executionHandler({ logger, jobState, instance }) {
   try {
     client = await createClient({ ...config, logger });
     logger.info('Fetching databases...');
+    const forbiddenWarehouses: string[] = [];
 
     await jobState.iterateEntities(
       { _type: 'snowflake_warehouse' },
       async (warehouse: SnowflakeWarehouse) => {
         warehouseMap.set(warehouse.name, warehouse);
 
-        await client!.setWarehouse(warehouse.name);
+        try {
+          await client!.setWarehouse(warehouse.name);
+        } catch (err) {
+          if (err.message.includes('Insufficient privileges to operate')) {
+            forbiddenWarehouses.push(warehouse.name);
+            return;
+          }
+          throw err;
+        }
         for await (const rawDatabase of client!.fetchDatabases()) {
           const snowflakeDatabase = convertDatabase(
             rawDatabase,
@@ -114,6 +129,15 @@ async function executionHandler({ logger, jobState, instance }) {
         }
       },
     );
+
+    if (forbiddenWarehouses.length) {
+      logger.publishWarnEvent({
+        name: IntegrationWarnEventName.MissingPermission,
+        description: `Skipped fetching databases for warehouses, the user has insufficient privileges to operate in the following warehouses: ${forbiddenWarehouses.join(
+          ', ',
+        )}`,
+      });
+    }
 
     logger.info('Done fetching databases.');
   } catch (error) {
