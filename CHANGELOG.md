@@ -1,3 +1,15 @@
+# v3.2.1 (Fri Dec 01 2023)
+
+#### 🐛 Bug Fix
+
+- skip warehouses for insufficient privileges [#59](https://github.com/JupiterOne/graph-snowflake/pull/59) ([@RonaldEAM](https://github.com/RonaldEAM))
+
+#### Authors: 1
+
+- Ronald Arias ([@RonaldEAM](https://github.com/RonaldEAM))
+
+---
+
 # v3.2.0 (Fri Dec 01 2023)
 
 #### 🚀 Enhancement
